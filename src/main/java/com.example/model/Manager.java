@@ -18,25 +18,24 @@ public class Manager {
         return postImpl.getAllPost();
     }
 
-    //don't use this method yet
+
     public static Set<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag){
-// problematic
-//        Integer userId;
-//        Date startDate, endDate;
-//        if(userId_str.equals("") || userId_str == null){
-//            userId_str = null;
-//        }
-//        else{
-//            userId = Integer.parseInt(userId_str);
-//        }
-//
-//        if(startDate_str.equals("") || startDate_str == null){
-//            startDate_str = null;
-//        }
-//        else{
-//            startDate = parseDate(startDate_str);
-//        }
-        return null;
+
+        if(userId_str.equals("")){
+            userId_str = null;
+        }
+        if(startDate_str.equals("")){
+            startDate_str = null;
+        }
+        if(endDate_str.equals("")){
+            endDate_str = null;
+        }
+        if(hashTag.equals("")){
+            hashTag = null;
+        }
+
+
+        return postImpl.getPost(userId_str,startDate_str,endDate_str,hashTag);
 
     }
 
@@ -59,8 +58,8 @@ public class Manager {
         }
     }
 
-    public static boolean deletePost(String postId_str){
-        Integer postId = Integer.parseInt(postId_str);
+    public static boolean deletePost(Integer postId){
+
         if(postImpl.deletePost(postId)){
             return true;
         }
@@ -72,9 +71,10 @@ public class Manager {
 
 
 
-    private static java.util.Date parseDate(String date) {
+    public static java.util.Date parseDate(String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return new Date(utilDate.getTime());
         } catch (ParseException e) {
             System.out.println("Wrong format for Date, should be yyyy-MM-dd");
             return null;

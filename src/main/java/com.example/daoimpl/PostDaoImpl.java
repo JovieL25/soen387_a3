@@ -42,16 +42,11 @@ public class PostDaoImpl implements PostDAO {
         return null;
     }
 
-//    @Override
-//    public Set<Post> getPost(){
-//
-//    }
+
 
     @Override
-    public Set<Post> getPost(Integer userId, Date startDate, Date endDate, String hashTag) {
-        // still a lot of problem
-        // 1. can't compare date
-        // how to find hashtag in its text string
+    public Set<Post> getPost(String userId, String startDate, String endDate, String hashTag) {
+
         Connection connection = DBConnection.getConnection();
 
         boolean addWhere = false;
@@ -59,35 +54,33 @@ public class PostDaoImpl implements PostDAO {
         String query = "SELECT * FROM posts";
 
         if(userId != null){
-            query += " WHERE user_id = " + userId;
+            query += " WHERE user_id = " + Integer.valueOf(userId);
             addWhere = true;
         }
 
         if(startDate != null && !addWhere){
-            query += " WHERE post_date >= " + startDate;
+            query += " WHERE post_date >= '" + startDate+"'";
             addWhere = true;
         }
         else if(startDate != null){
-            query += " AND post_date >= " + startDate;
+            query += " AND post_date >= '" + startDate+"'";
         }
 
         if(endDate != null && !addWhere){
-            query += " WHERE post_date <= " + endDate;
+            query += " WHERE post_date <= '" + endDate+"'";
             addWhere = true;
         }
         else if(endDate != null){
-            query += " AND post_date <= " + endDate;
+            query += " AND post_date <= '" + endDate+"'";
         }
-
-
 
 
         if(hashTag != null && !addWhere){
-            query += " WHERE text = " + hashTag;
+            query += " WHERE text LIKE \"%#" + hashTag + "%\"";
             addWhere = true;
         }
         else if(hashTag != null){
-            query += " AND text = " + hashTag;
+            query += " AND text LIKE \"%#" + hashTag + "%\"";
         }
         System.out.println(query);
 
@@ -131,8 +124,8 @@ public class PostDaoImpl implements PostDAO {
 
             ps.setInt(1,post.getUserId());
             ps.setString(2, post.getTitle());
-            ps.setDate(3, post.getPostDate());
-            ps.setDate(4, post.getUpdateDate());
+            ps.setDate(3,new Date(System.currentTimeMillis()));
+            ps.setDate(4, null);
             ps.setString(5, post.getText());
             ps.setBoolean(6,false);
 
@@ -177,7 +170,7 @@ public class PostDaoImpl implements PostDAO {
             ps.setInt(1,post.getUserId());
             ps.setString(2, post.getTitle());
             ps.setDate(3, post.getPostDate());
-            ps.setDate(4, post.getUpdateDate());
+            ps.setDate(4, new Date(System.currentTimeMillis()));
             ps.setString(5, post.getText());
             ps.setBoolean(6,true);
             ps.setInt(7,post.getPostId());
@@ -241,49 +234,4 @@ public class PostDaoImpl implements PostDAO {
         return post;
     }
 
-    public static void main(String[] args){
-       PostDaoImpl postImpl = new PostDaoImpl();
-//
-//        Post p1 = new Post();
-//        p1.setUserId(1);
-//        p1.setPostDate(new Date(System.currentTimeMillis()));
-//        p1.setTitle("bonjour");
-//        p1.setText("bonjour text");
-//
-//        postImpl.createPost(p1);
-////getAllPost
-//        Set<Post> posts = postImpl.getAllPost();
-//        for(Post p : posts){
-//            System.out.println(p.getPostId());
-//            System.out.println(p.getText());
-//            System.out.println(p.getPostDate());
-//        }
-////getPost()
-//        postImpl.getPostByUserId(12,new Date(System.currentTimeMillis()),"bounjour");
-//        postImpl.getPostByUserId(12,null,null,"bounjour");
-//        postImpl.getPostByUserId(null,new Date(System.currentTimeMillis()),null,"bounjour");
-//        postImpl.getPostByUserId(null,new Date(System.currentTimeMillis()),null,null);
-//        postImpl.getPostByUserId(12,null,null,null);
-//        postImpl.getPostByUserId(null,new Date(System.currentTimeMillis()),new Date(System.currentTimeMillis()),null);
-//        Set<Post> posts = postImpl.getPost(1,new Date(System.currentTimeMillis()),null,null);
-//        for(Post p : posts){
-//            System.out.println(p.getPostId());
-//            System.out.println(p.getText());
-//            System.out.println(p.getPostDate());
-//        }
-////update
-//        Post p1 = new Post();
-//        p1.setPostId(10);
-//        p1.setUserId(1);
-//        p1.setPostDate(new Date(System.currentTimeMillis()));
-//        p1.setTitle("bonjour updated");
-//        p1.setText("bonjour text");
-//
-//        postImpl.updatePost(p1);
-////delete
-        postImpl.deletePost(8);
-
-
-
-    }
 }

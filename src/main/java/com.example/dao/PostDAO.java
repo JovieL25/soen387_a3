@@ -10,9 +10,7 @@ public interface PostDAO {
 
     Set<Post> getAllPost();
 
-    Set<Post> getPost(Integer userId,Date startDate,Date endDate,String hashTag);
-
-
+    Set<Post> getPost(String userId,String startDate,String endDate,String hashTag);
 
     boolean createPost(Post post);
 

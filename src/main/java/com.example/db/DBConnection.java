@@ -5,6 +5,7 @@ import java.sql.*;
 public class DBConnection {
 
     // NOTE: It'd be better to get them from a properties or XML configuration file
+             // make sure to change it to your DB credentials
 
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -15,6 +16,7 @@ public class DBConnection {
     // Database credentials
     static final String DB_USER = "root";
     static final String DB_PASSWORD = "Dkx19981214";
+
 
     static Connection conn = null;
 
