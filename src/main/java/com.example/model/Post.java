@@ -49,7 +49,11 @@ public class Post {
     public void setText(String text){this.text = text;}
 
     public void setUpdated(Boolean updated){this.updated = updated;}
+
+    public int compareTo(Post otherPost){return this.postDate.compareTo(otherPost.postDate);}
 }
+
+
 
 
 

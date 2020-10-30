@@ -1,6 +1,7 @@
 package com.example.dao;
 
 import com.example.model.Post;
+import com.example.model.User;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -17,6 +18,9 @@ public interface PostDAO {
     boolean updatePost(Post post);
 
     boolean deletePost(Integer postId);
+
+    User getUser(String email, String password);
+
 
 
 

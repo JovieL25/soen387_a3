@@ -1,10 +1,19 @@
 package com.example.daoimpl;
 
+import Utils.XMLFile;
 import com.example.db.DBConnection;
 import com.example.dao.PostDAO;
 import com.example.model.Post;
+import com.example.model.User;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -219,6 +228,53 @@ public class PostDaoImpl implements PostDAO {
         return false;
     }
 
+    public User getUser(String email, String password){
+
+        try{
+
+            File fXmlFile = new File("user.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+
+            //optional, but recommended
+            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            doc.getDocumentElement().normalize();
+
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+            NodeList nList = doc.getElementsByTagName("user");
+
+            System.out.println("----------------------------");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                Node nNode = nList.item(temp);
+
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    if(eElement.getElementsByTagName("email").item(0).getTextContent().equals(email)
+                            && eElement.getElementsByTagName("password").item(0).getTextContent().equals(XMLFile.hashPassword(password)))
+                    {
+                        System.out.println("we have a match email address and password");
+                        User user = new User();
+                        user.setName(eElement.getElementsByTagName("name").item(0).getTextContent());
+                        user.setUserId(eElement.getAttribute("id"));
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
     private Post extractPostFromResultSet(ResultSet rs) throws SQLException {
 
         Post post = new Post();
@@ -232,6 +288,13 @@ public class PostDaoImpl implements PostDAO {
         post.setUpdated(rs.getBoolean("updated"));
 
         return post;
+    }
+
+    public static void main(String[] args){
+        PostDaoImpl p1 = new PostDaoImpl();
+
+        p1.getUser("kaixindai@gmail.com", "12345");
+
     }
 
 }
