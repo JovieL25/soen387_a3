@@ -21,6 +21,14 @@ public interface PostDAO {
 
     User getUser(String email, String password);
 
+    boolean uploadFile(String filePath, Integer postId);
+
+    boolean changeFile(String filePath, Integer postId);
+
+    boolean deleteFile(Integer postId);
+
+
+
 
 
 

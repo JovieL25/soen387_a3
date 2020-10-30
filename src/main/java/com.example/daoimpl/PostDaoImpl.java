@@ -14,6 +14,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -158,6 +160,7 @@ public class PostDaoImpl implements PostDAO {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
+
             try {
                 connection.close();
             } catch(SQLException e){
@@ -227,7 +230,7 @@ public class PostDaoImpl implements PostDAO {
 
         return false;
     }
-
+    @Override
     public User getUser(String email, String password){
 
         try{
@@ -274,6 +277,163 @@ public class PostDaoImpl implements PostDAO {
         return null;
 
     }
+    @Override
+    public boolean uploadFile(String filePath, Integer postId) {
+        Connection connection = DBConnection.getConnection();
+        FileInputStream input = null;
+
+
+        try{
+            String query = "INSERT INTO files (content,file_name,file_size,media_type,post_id) VALUES (?, ?, ?, ?, ?)";
+            // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
+            PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
+            File theFile = new File("user.xml");
+            input = new FileInputStream(theFile);
+            Double fileSize = (double) theFile.length();
+            String fullFileName = theFile.getName();
+            System.out.println(fullFileName);
+            String[] strs = fullFileName.split("\\.");
+
+            String fileName = strs[0];
+            String mediaType = strs[1];
+
+            System.out.println(fileSize);
+            System.out.println(fileName);
+            System.out.println(mediaType);
+
+            System.out.println("Reading input file: " + theFile.getAbsolutePath());
+
+            ps.setBinaryStream(1,input);
+            ps.setString(2, fileName);
+            ps.setDouble(3,fileSize);
+            ps.setString(4, mediaType);
+            ps.setInt(5, postId);
+
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+
+
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+
+    }
+
+    @Override
+    public boolean changeFile(String filePath, Integer postId) {
+        Connection connection = DBConnection.getConnection();
+        FileInputStream input = null;
+
+
+        try{
+            String query = "UPDATE files SET content=?, file_name=?,file_size=?,media_type=? WHERE post_id=?";
+            // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
+            PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
+            File theFile = new File("lol.txt");
+            input = new FileInputStream(theFile);
+            Double fileSize = (double) theFile.length();
+            String fullFileName = theFile.getName();
+            System.out.println(fullFileName);
+            String[] strs = fullFileName.split("\\.");
+
+            String fileName = strs[0];
+            String mediaType = strs[1];
+
+            System.out.println(fileSize);
+            System.out.println(fileName);
+            System.out.println(mediaType);
+
+            System.out.println("Reading input file: " + theFile.getAbsolutePath());
+
+            ps.setBinaryStream(1,input);
+            ps.setString(2, fileName);
+            ps.setDouble(3,fileSize);
+            ps.setString(4, mediaType);
+            ps.setInt(5, postId);
+
+            changePostStatus(postId);
+
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+
+
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean deleteFile(Integer postId) {
+        Connection connection = DBConnection.getConnection();
+
+        try{
+            String query = ("DELETE FROM files WHERE post_id=" + postId);
+            System.out.println(query);
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+
+
+                return true;
+            }
+
+        }
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            return false;
+        }
+
+    }
 
     private Post extractPostFromResultSet(ResultSet rs) throws SQLException {
 
@@ -290,10 +450,36 @@ public class PostDaoImpl implements PostDAO {
         return post;
     }
 
+    private boolean changePostStatus(Integer postId){
+        Connection connection = DBConnection.getConnection();
+
+        try{
+            String query = ("UPDATE posts SET updated=true WHERE post_id=" + postId);
+            System.out.println(query);
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+
+
+                return true;
+            }
+
+        }
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            return false;
+        }
+    }
+
     public static void main(String[] args){
         PostDaoImpl p1 = new PostDaoImpl();
 
-        p1.getUser("kaixindai@gmail.com", "12345");
+        p1.deleteFile(12);
+
 
     }
 

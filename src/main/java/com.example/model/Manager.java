@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 //This is the business class
-// work with post java beans
+
+
+
 public class Manager {
 
     private static  PostDaoImpl postImpl = new PostDaoImpl();
@@ -23,7 +25,7 @@ public class Manager {
     }
 
 
-
+    // each parameter can be left as empty
     public static ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag){
 
         if(userId_str.equals("")){
@@ -63,8 +65,8 @@ public class Manager {
         }
     }
 
-    public static boolean deletePost(Integer postId){
-
+    public static boolean deletePost(String postId_str){
+        Integer postId = Integer.parseInt(postId_str);
         if(postImpl.deletePost(postId)){
             return true;
         }
@@ -73,8 +75,31 @@ public class Manager {
         }
     }
 
+    //login uses the passed email and password and search the user.xml file
+    //with the same credentials, when they are match, this method returns this '
+    //user object, otherwise it returns null
     public static User login(String email, String password){
         return postImpl.getUser(email,password);
+    }
+
+    public static boolean uploadFile(String filePath, String postId_str){
+        Integer postId = Integer.parseInt(postId_str);
+
+        return postImpl.uploadFile(filePath,postId);
+
+    }
+
+    public static boolean changeFile(String filePath, String postId_str){
+        Integer postId = Integer.parseInt(postId_str);
+
+        return postImpl.changeFile(filePath,postId);
+    }
+
+    public static boolean deleteFile(String postId_str){
+        Integer postId = Integer.parseInt(postId_str);
+
+        return postImpl.deleteFile(postId);
+
     }
 
 
