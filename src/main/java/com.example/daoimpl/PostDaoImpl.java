@@ -11,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
+import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -279,6 +280,69 @@ public class PostDaoImpl implements PostDAO {
         return null;
 
     }
+
+    @Override
+    public boolean insertFile(Part part, Post post) {
+        Connection connection = DBConnection.getConnection();
+        FileInputStream input = null;
+
+        try{
+            String query = "INSERT INTO files (content, file_name, file_size, media_type, post_id) VALUES (?, ?, ?, ?, ?)";
+            // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
+            PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
+            File theFile = new File("user.xml");
+            input = new FileInputStream(theFile);
+            Double fileSize = (double) theFile.length();
+            String fullFileName = theFile.getName();
+            System.out.println(fullFileName);
+            String[] strs = fullFileName.split("\\.");
+
+            String fileName = strs[0];
+            String mediaType = strs[1];
+
+            System.out.println(fileSize);
+            System.out.println(fileName);
+            System.out.println(mediaType);
+
+            System.out.println("Reading input file: " + theFile.getAbsolutePath());
+
+            ps.setBinaryStream(1,input);
+            ps.setString(2, fileName);
+            ps.setDouble(3,fileSize);
+            ps.setString(4, mediaType);
+            ps.setInt(5, post.getPostId());
+
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+
+    }
+
     @Override
     public boolean uploadFile(String filePath, Integer postId) {
         Connection connection = DBConnection.getConnection();

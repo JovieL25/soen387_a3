@@ -64,23 +64,23 @@
             </div>
         </form>
 
-        <form action="A1Servlet" method="POST" class="get-post-form">
-            <div class="form-row">
-                <div class="form-group col-5">
-                    <label for="clear-from" class="sr-only">From</label>
-                    <input type="text" class="form-control" id="clear-from" name="clear-from" placeholder="From">
-                </div>
+<%--        <form action="A1Servlet" method="POST" class="get-post-form">--%>
+<%--            <div class="form-row">--%>
+<%--                <div class="form-group col-5">--%>
+<%--                    <label for="clear-from" class="sr-only">From</label>--%>
+<%--                    <input type="text" class="form-control" id="clear-from" name="clear-from" placeholder="From">--%>
+<%--                </div>--%>
 
-                <div class="form-group col-5">
-                    <label for="clear-to" class="sr-only">To</label>
-                    <input type="text" class="form-control" id="clear-to" name="clear-to" placeholder="To">
-                </div>
+<%--                <div class="form-group col-5">--%>
+<%--                    <label for="clear-to" class="sr-only">To</label>--%>
+<%--                    <input type="text" class="form-control" id="clear-to" name="clear-to" placeholder="To">--%>
+<%--                </div>--%>
 
-                <div class="form-group col-2">
-                    <input type="submit" class="btn btn-clear" name="clear" value="Clear History">
-                </div>
-            </div>
-        </form>
+<%--                <div class="form-group col-2">--%>
+<%--                    <input type="submit" class="btn btn-clear" name="clear" value="Clear History">--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </form>--%>
 
         <ul class="list-unstyled chat-area">
             <c:forEach var="message" items="${messages}">
@@ -92,7 +92,7 @@
             </c:forEach>
         </ul>
 
-        <form action="A1Servlet" method="POST" class="get-post-form">
+        <form action="A1Servlet" method="POST" enctype="multipart/form-data" class="get-post-form">
             <div class="form-row">
                 <div class="form-group col-12">
                     <label for="message" class="sr-only">Type a message</label>
@@ -111,11 +111,11 @@
                     <input type="file" id="file" name="file" accept="text/plain, text/xml, image/jpeg, image/png">
                 </div>
 
-                <div class="form-group col-1">
+                <div class="form-group col-1 offset-5">
                     <%= "<input class=\"btn " + (theme.equals("blue") ? "btn-primary" : "btn-success") + "\" type=\"submit\" name=\"post\" value=\"Post\">" %>
                 </div>
 
-                <div class="form-group col-1 offset-5">
+                <div class="form-group col-1">
                     <%= "<input class=\"btn " + (theme.equals("blue") ? "btn-primary" : "btn-success") + "\" type=\"submit\" name=\"refresh\" value=\"Refresh Page\">" %>
                 </div>
             </div>

@@ -3,6 +3,7 @@ package com.example.dao;
 import com.example.model.Post;
 import com.example.model.User;
 
+import javax.servlet.http.Part;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Set;
@@ -20,6 +21,8 @@ public interface PostDAO {
     boolean deletePost(Integer postId);
 
     User getUser(String email, String password);
+
+    boolean insertFile(Part part, Post post);
 
     boolean uploadFile(String filePath, Integer postId);
 
