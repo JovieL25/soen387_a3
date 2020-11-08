@@ -133,6 +133,8 @@ public class PostDaoImpl implements PostDAO {
             // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
             PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
+            System.out.println();
+
             ps.setInt(1,post.getUserId());
             ps.setString(2, post.getTitle());
             ps.setDate(3,new Date(System.currentTimeMillis()));
@@ -314,8 +316,6 @@ public class PostDaoImpl implements PostDAO {
             int i = ps.executeUpdate();
 
             if(i == 1) {
-
-
                 return true;
             }
 
