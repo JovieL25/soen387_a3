@@ -6,13 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import com.example.model.Manager;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 
 @MultipartConfig
@@ -69,40 +70,24 @@ public class A1Servlet extends HttpServlet {
         String to     = request.getParameter("download-to");
         String format = request.getParameter("download-format");
 
-        if (!format.equals("") && !format.equals("txt") && !format.equals("xml")) {
-            request.getSession().setAttribute("format-error", "The format must be plain-text or xml.");
+        int postId = Integer.parseInt(format);
 
-            request.getRequestDispatcher("/").forward(request, response);
+        File file = Manager.selectFile(postId);
 
-            return;
-        }
+        String fileName = file.getName();
 
-        ArrayList<Message> messages;
-        if (!from.equals("") && !to.equals(""))
-            messages = ChatManager.ListMessages(from, to);
-        else
-            messages = ChatManager.ListMessages();
+        byte[] fileContent = FileUtils.readFileToByteArray(file);
 
-        StringBuilder messagesStr = new StringBuilder();
-        if (format.equals("txt") || format.equals("")) {
-            for (Message message : messages) {
-                messagesStr.append(message.toString());
-            }
-
-            response.setHeader("Content-Disposition", "attachment; filename=\"messages.txt\"");
+        String fileExtension = FilenameUtils.getExtension(fileName);
+        if (fileExtension.equals("txt"))
             response.setContentType("text/plain");
-        }
-        else {
-            for (Message message : messages) {
-                messagesStr.append(message.toXmlString());
-            }
-
-            response.setHeader("Content-Disposition", "attachment; filename=\"messages.xml\"");
+        else if (fileExtension.equals("xml"))
             response.setContentType("text/xml");
-        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(messagesStr.toString().getBytes());
+        outputStream.write(fileContent);
         outputStream.flush();
         outputStream.close();
     }
@@ -111,12 +96,11 @@ public class A1Servlet extends HttpServlet {
         String user    = request.getParameter("user");
         String message = request.getParameter("message");
 
-        Part filePart = request.getPart("file");
+        int postId = Integer.parseInt(user);
 
-        System.out.println(filePart.getSubmittedFileName());
-        System.out.println(Paths.get(filePart.getSubmittedFileName()).getFileName().toString());
+        Part part = request.getPart("file");
 
-        InputStream fileContent = filePart.getInputStream();
+        Manager.insertFile(part, postId);
 
         ChatManager.PostMessage(user, message);
 

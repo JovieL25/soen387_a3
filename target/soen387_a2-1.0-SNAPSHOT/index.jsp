@@ -55,7 +55,7 @@
 
                 <div class="form-group col-2">
                     <label for="download-format" class="sr-only">Format</label>
-                    <input type="text" class="form-control format" id="download-format" name="download-format" value="txt">
+                    <input type="text" class="form-control format" id="download-format" name="download-format" placeholder="Post ID">
                 </div>
 
                 <div class="form-group col-2">
@@ -103,7 +103,7 @@
             <div class="form-row">
                 <div class="form-group col-4">
                     <label for="user" class="sr-only">Username</label>
-                    <input type="text" class="form-control" id="user" name="user" placeholder="Username">
+                    <input type="text" class="form-control" id="user" name="user" placeholder="Post ID">
                 </div>
 
                 <div class="form-group col-1">

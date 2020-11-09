@@ -11,16 +11,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
+
 import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("SqlNoDataSourceInspection")
 public class PostDaoImpl implements PostDAO {
 
     @Override
@@ -282,36 +282,29 @@ public class PostDaoImpl implements PostDAO {
     }
 
     @Override
-    public boolean insertFile(Part part, Post post) {
+    public boolean insertFile(Part part, int postId) {
         Connection connection = DBConnection.getConnection();
-        FileInputStream input = null;
+        InputStream input = null;
 
         try{
             String query = "INSERT INTO files (content, file_name, file_size, media_type, post_id) VALUES (?, ?, ?, ?, ?)";
             // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
             PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
-            File theFile = new File("user.xml");
-            input = new FileInputStream(theFile);
-            Double fileSize = (double) theFile.length();
-            String fullFileName = theFile.getName();
+            input = part.getInputStream();
+            double fileSize = (double)part.getSize();
+            String fullFileName = part.getSubmittedFileName();
             System.out.println(fullFileName);
             String[] strs = fullFileName.split("\\.");
 
             String fileName = strs[0];
             String mediaType = strs[1];
 
-            System.out.println(fileSize);
-            System.out.println(fileName);
-            System.out.println(mediaType);
-
-            System.out.println("Reading input file: " + theFile.getAbsolutePath());
-
             ps.setBinaryStream(1,input);
             ps.setString(2, fileName);
-            ps.setDouble(3,fileSize);
+            ps.setDouble(3, fileSize);
             ps.setString(4, mediaType);
-            ps.setInt(5, post.getPostId());
+            ps.setInt(5, postId);
 
 
             int i = ps.executeUpdate();
@@ -341,6 +334,39 @@ public class PostDaoImpl implements PostDAO {
 
         return false;
 
+    }
+
+    @Override
+    public File selectFile(int postId) throws SQLException {
+        Connection connection = DBConnection.getConnection();
+
+        String query = "SELECT * FROM files WHERE post_id=?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        statement.setInt(1, postId);
+
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+
+        String baseName  = resultSet.getString("file_name");
+        String extension = resultSet.getString("media_type");
+
+        byte[] bytes = resultSet.getBytes("content");
+
+        connection.close();
+
+        File file = new File(baseName + "." + extension);
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            fileOutputStream.write(bytes);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return file;
     }
 
     @Override

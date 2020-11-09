@@ -4,7 +4,7 @@ import com.example.model.Post;
 import com.example.model.User;
 
 import javax.servlet.http.Part;
-import java.sql.Date;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -22,7 +22,9 @@ public interface PostDAO {
 
     User getUser(String email, String password);
 
-    boolean insertFile(Part part, Post post);
+    boolean insertFile(Part part, int postId);
+
+    File selectFile(int postId) throws SQLException;
 
     boolean uploadFile(String filePath, Integer postId);
 
