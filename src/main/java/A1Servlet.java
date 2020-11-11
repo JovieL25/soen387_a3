@@ -9,16 +9,17 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import com.example.model.Manager;
+import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 
 @MultipartConfig
 @WebServlet(name = "A1Servlet")
 public class A1Servlet extends HttpServlet {
+    private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String referer = request.getHeader("Referer");
         if (referer == null) {
@@ -74,20 +75,14 @@ public class A1Servlet extends HttpServlet {
 
         File file = Manager.selectFile(postId);
 
+        String contentType = mimetypesFileTypeMap.getContentType(file);
+        response.setContentType(contentType);
+
         String fileName = file.getName();
-
-        byte[] fileContent = FileUtils.readFileToByteArray(file);
-
-        String fileExtension = FilenameUtils.getExtension(fileName);
-        if (fileExtension.equals("txt"))
-            response.setContentType("text/plain");
-        else if (fileExtension.equals("xml"))
-            response.setContentType("text/xml");
-
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(fileContent);
+        outputStream.write(FileUtils.readFileToByteArray(file));
         outputStream.flush();
         outputStream.close();
     }
