@@ -54,8 +54,6 @@ public class PostDaoImpl implements PostDAO {
         return null;
     }
 
-
-
     @Override
     public Set<Post> getPost(String userId, String startDate, String endDate, String hashTag) {
 
@@ -122,7 +120,6 @@ public class PostDaoImpl implements PostDAO {
 
         return null;
     }
-
 
 
     @Override
@@ -237,7 +234,6 @@ public class PostDaoImpl implements PostDAO {
     public User getUser(String email, String password){
 
         try{
-
             File fXmlFile = new File("user.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
