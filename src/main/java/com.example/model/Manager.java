@@ -3,7 +3,10 @@ package com.example.model;
 import Utils.PostComparator;
 import com.example.daoimpl.PostDaoImpl;
 
+import javax.servlet.http.Part;
+import java.io.File;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,6 +83,22 @@ public class Manager {
     //user object, otherwise it returns null
     public static User login(String email, String password){
         return postImpl.getUser(email,password);
+    }
+
+    public static boolean insertFile(Part part, int postId) {
+        return postImpl.insertFile(part, postId);
+    }
+
+    public static File selectFile(int postId) {
+        File file = null;
+
+        try {
+            file = postImpl.selectFile(postId);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        return file;
     }
 
     public static boolean uploadFile(String filePath, String postId_str){
