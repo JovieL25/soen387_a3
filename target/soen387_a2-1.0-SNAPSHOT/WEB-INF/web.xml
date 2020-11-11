@@ -5,17 +5,17 @@
          version="4.0">
 
     <servlet>
-        <servlet-name>A1Servlet</servlet-name>
-        <servlet-class>A1Servlet</servlet-class>
+        <servlet-name>A2Servlet</servlet-name>
+        <servlet-class>A2Servlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>A1Servlet</servlet-name>
-        <url-pattern>/A1Servlet</url-pattern>
+        <servlet-name>A2Servlet</servlet-name>
+        <url-pattern>/A2Servlet</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>login.html</welcome-file>
     </welcome-file-list>
 
 
