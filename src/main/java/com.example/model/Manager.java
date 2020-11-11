@@ -21,7 +21,6 @@ public class Manager {
     private static  PostDaoImpl postImpl = new PostDaoImpl();
 
 
-
     public static ArrayList<Post> getAllPost(){
 
         return SortPosts(postImpl.getAllPost());

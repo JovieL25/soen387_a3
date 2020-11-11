@@ -9,9 +9,12 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+
 import com.example.model.Manager;
 import javax.activation.MimetypesFileTypeMap;
 
+import com.example.model.User;
 import org.apache.commons.io.FileUtils;
 
 
@@ -19,7 +22,7 @@ import org.apache.commons.io.FileUtils;
 @WebServlet(name = "A2Servlet")
 public class A2Servlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
-
+    private static ArrayList<User> Users_list;
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String referer = request.getHeader("Referer");
         if (referer == null) {
@@ -35,6 +38,7 @@ public class A2Servlet extends HttpServlet {
         String download = request.getParameter("download");
         if (download != null)
             downloadMessages(request, response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -48,8 +52,10 @@ public class A2Servlet extends HttpServlet {
         }
 
         String post = request.getParameter("post");
+        /*
         if (post != null)
             postMessage(request, response);
+        */
 
         String clear = request.getParameter("clear");
         if (clear != null)
@@ -63,7 +69,17 @@ public class A2Servlet extends HttpServlet {
         if (switch_theme != null)
             switchTheme(request, response);
 
-        response.setHeader("Expires", "0");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        if(email!=null && password!=null && Manager.login(email,password)!=null) {
+            Users_list.add(Manager.login(email, password));
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
+        else{
+            request.getSession().setAttribute("Authentication Failed", "User does not exist");
+            response.sendRedirect(request.getContextPath());
+            return;
+        }
     }
 
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
