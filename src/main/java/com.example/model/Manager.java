@@ -21,14 +21,36 @@ public class Manager {
     private static  PostDaoImpl postImpl = new PostDaoImpl();
 
 
-    public static ArrayList<Post> getAllPost(){
+    public static ArrayList<Post> getAllPost(String number_str){
 
-        return SortPosts(postImpl.getAllPost());
+        if(number_str.equals(""))
+        {
+            return SortPosts(postImpl.getAllPost());
+        }
+        else
+            {
+                int number = Integer.parseInt(number_str);
+
+                ArrayList<Post> posts = SortPosts(postImpl.getAllPost());
+                int trim = posts.size() - number;
+                if(trim > 0)
+
+                {
+                    for(int i = 0 ; i < trim ; i ++)
+                    {
+                        int last_index = posts.size() - 1;
+                        posts.remove(last_index);
+                    }
+                }
+
+                return posts;
+            }
+
     }
 
 
     // each parameter can be left as empty
-    public static ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag){
+    public static ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag, String number_str){
 
         if(userId_str.equals("")){
             userId_str = null;
@@ -42,9 +64,29 @@ public class Manager {
         if(hashTag.equals("")){
             hashTag = null;
         }
+        if(number_str.equals(""))
+        {
+            return SortPosts(postImpl.getPost(userId_str,startDate_str,endDate_str,hashTag));
+        }
+        else
+            {
+                int number = Integer.parseInt(number_str);
 
+                ArrayList<Post> posts = SortPosts(postImpl.getPost(userId_str,startDate_str,endDate_str,hashTag));
+                int trim = posts.size() - number;
+                if(trim > 0)
 
-        return SortPosts(postImpl.getPost(userId_str,startDate_str,endDate_str,hashTag));
+                {
+                    for(int i = 0 ; i < trim ; i ++)
+                    {
+                        int last_index = posts.size() - 1;
+                        posts.remove(last_index);
+                    }
+                }
+
+                return posts;
+            }
+
 
     }
 
