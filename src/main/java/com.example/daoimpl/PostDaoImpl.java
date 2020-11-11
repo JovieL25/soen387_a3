@@ -11,15 +11,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
+
+import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("SqlNoDataSourceInspection")
 public class PostDaoImpl implements PostDAO {
 
     @Override
@@ -132,6 +133,8 @@ public class PostDaoImpl implements PostDAO {
             String query = "INSERT INTO posts (user_id,title,post_date,update_date,text,updated) VALUES (?, ?, ?, ?, ?, ?)";
             // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
             PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
+            System.out.println();
 
             ps.setInt(1,post.getUserId());
             ps.setString(2, post.getTitle());
@@ -277,6 +280,95 @@ public class PostDaoImpl implements PostDAO {
         return null;
 
     }
+
+    @Override
+    public boolean insertFile(Part part, int postId) {
+        Connection connection = DBConnection.getConnection();
+        InputStream input = null;
+
+        try{
+            String query = "INSERT INTO files (content, file_name, file_size, media_type, post_id) VALUES (?, ?, ?, ?, ?)";
+            // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
+            PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
+            input = part.getInputStream();
+            double fileSize = (double)part.getSize();
+            String fullFileName = part.getSubmittedFileName();
+            System.out.println(fullFileName);
+            String[] strs = fullFileName.split("\\.");
+
+            String fileName = strs[0];
+            String mediaType = strs[1];
+
+            ps.setBinaryStream(1,input);
+            ps.setString(2, fileName);
+            ps.setDouble(3, fileSize);
+            ps.setString(4, mediaType);
+            ps.setInt(5, postId);
+
+
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+
+    }
+
+    @Override
+    public File selectFile(int postId) throws SQLException {
+        Connection connection = DBConnection.getConnection();
+
+        String query = "SELECT * FROM files WHERE post_id=?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        statement.setInt(1, postId);
+
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+
+        String baseName  = resultSet.getString("file_name");
+        String extension = resultSet.getString("media_type");
+
+        byte[] bytes = resultSet.getBytes("content");
+
+        connection.close();
+
+        File file = new File(baseName + "." + extension);
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            fileOutputStream.write(bytes);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return file;
+    }
+
     @Override
     public boolean uploadFile(String filePath, Integer postId) {
         Connection connection = DBConnection.getConnection();
@@ -314,8 +406,6 @@ public class PostDaoImpl implements PostDAO {
             int i = ps.executeUpdate();
 
             if(i == 1) {
-
-
                 return true;
             }
 
