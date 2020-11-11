@@ -36,8 +36,8 @@ public class DBConnection {
         }
     }
 
-    public static void closeConnection() throws SQLException{
-        //Close connection
-        if(conn!=null) conn.close();
+    public static void closeConnection() throws SQLException {
+        if (conn!=null)
+            conn.close();
     }
 }
