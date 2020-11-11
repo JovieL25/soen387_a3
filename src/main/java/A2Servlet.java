@@ -17,8 +17,8 @@ import org.apache.commons.io.FilenameUtils;
 
 
 @MultipartConfig
-@WebServlet(name = "A1Servlet")
-public class A1Servlet extends HttpServlet {
+@WebServlet(name = "A2Servlet")
+public class A2Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String referer = request.getHeader("Referer");
         if (referer == null) {
