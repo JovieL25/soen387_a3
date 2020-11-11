@@ -117,9 +117,13 @@ function App() {
     ));
   };
 
+  const logOut = () => {
+    console.log("LOG OUT");
+  }
+
   return (
     <div className="app">
-      <Header userName={userName} handleSearch={handleSearch} numPostInView={numPostInView} updateNumPostInView={updateNumPostInView} />
+      <Header userName={userName} logOut={logOut} handleSearch={handleSearch} numPostInView={numPostInView} updateNumPostInView={updateNumPostInView} />
       
       
       <PostForm addPost={addPost} /> 

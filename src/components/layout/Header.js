@@ -3,6 +3,7 @@ import React, { useState } from "react";
 function Header(props) {
   const [postInViewList] = useState([5, 10, 20, 30]);
   const [value, setValue] = useState("");
+  
   const renderDropDown = () => {
     var i = props.numPostInView;
     return postInViewList.map((item,key) => {
@@ -48,7 +49,13 @@ function Header(props) {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item dropdown">
+            <li class="nav-item active">
+              <a class="nav-link">{props.userName}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onClick={() => props.logOut()}>Log out</a>
+            </li>
+            <li className="nav-item active dropdown">
               <a
                 className="nav-link dropdown-toggle"
                 id="navbarDropdown"
@@ -68,14 +75,16 @@ function Header(props) {
             <form onSubmit={handleSearch}>
               <input
                 type="text"
-                className="input"
+                class="form-control form-control-sm"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                
+                placeholder="search"
               />
             </form>
-          </div>
+          </div>          
         </div>
+        
+        
       </nav>
     </div>
   );

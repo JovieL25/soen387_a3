@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+/* @QUERY */import { render } from "@testing-library/react";
 import React, { useState} from "react";
 
 // https://getbootstrap.com/docs/4.3/components/modal/
@@ -32,7 +32,7 @@ function NewPostModal(props) {
     const date = new Date(timeElapsed).toLocaleDateString();
 
     console.log(id + ", " + name + ", " + txt + ", " + date);
-    
+    /* @QUERY */
   }
 
  

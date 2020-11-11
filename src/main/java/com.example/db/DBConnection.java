@@ -15,7 +15,7 @@ public class DBConnection {
 //    static final String DB_NAME = "concordia?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     // Database credentials
     static final String DB_USER = "root";
-    static final String DB_PASSWORD = "Dkx19981214";
+    static final String DB_PASSWORD = "4562";
 
 
     static Connection conn = null;
