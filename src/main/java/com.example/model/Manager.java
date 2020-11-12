@@ -97,7 +97,6 @@ public class Manager {
         else{
             return false;
         }
-
     }
 
     public static boolean updatePost(Post post){
@@ -146,7 +145,6 @@ public class Manager {
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.uploadFile(filePath,postId);
-
     }
 
     public static boolean changeFile(String filePath, String postId_str){
@@ -159,7 +157,6 @@ public class Manager {
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.deleteFile(postId);
-
     }
 
 

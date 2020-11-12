@@ -103,6 +103,7 @@ public class A2Servlet extends HttpServlet {
         outputStream.close();
     }
 
+
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user    = request.getParameter("user");
         String message = request.getParameter("message");

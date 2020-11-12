@@ -71,6 +71,8 @@ function App() {
 
   const renderPosts = () => {
     var len = numPostInView;
+    /* call backend */
+    /* UPDATE */
     if(posts.length<len) len = posts.length
     console.log("RENDERING " + len + " POSTS")
     return posts.slice(0,len).map((post, key) => (
