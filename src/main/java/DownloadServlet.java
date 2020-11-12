@@ -35,7 +35,7 @@ public class DownloadServlet extends HttpServlet {
 
             return;
         }
-
+        //TODO: Add a session object or cookie to keep track login user.
         String download = request.getParameter("download");
         if (download != null)
             downloadMessages(request, response);
@@ -46,10 +46,12 @@ public class DownloadServlet extends HttpServlet {
         String referer = request.getHeader("Referer");
         if (referer == null) {
             request.getSession().setAttribute("referer-error", "Referer is not present.");
-
             response.sendRedirect(request.getContextPath());
-
             return;
+        }
+        if(request.getParameter("signup")!=null){
+            request.setAttribute("signupError","1");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 
         String login = request.getParameter("login");
@@ -74,6 +76,10 @@ public class DownloadServlet extends HttpServlet {
         if (switch_theme != null)
             switchTheme(request, response);
 
+        System.out.println(request.getParameter("Logout"));
+        if (request.getParameter("Logout")!=null)
+            request.getRequestDispatcher("login.html").forward(request, response);
+
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,10 +89,13 @@ public class DownloadServlet extends HttpServlet {
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
         boolean isValid = Manager.authenticate(email, password, usersFile);
-        if (isValid)
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+        if (isValid){
+            //request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            refresh(request,response);
+        }
+
         else
-            request.getRequestDispatcher("login.html").forward(request, response);
+            request.getRequestDispatcher("/login.html").forward(request, response);
     }
 
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -130,7 +139,7 @@ public class DownloadServlet extends HttpServlet {
 
         request.setAttribute("posts", Manager.getAllPost());
 
-        request.getRequestDispatcher("/index.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
     private void clearMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -148,9 +157,8 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("messages", ChatManager.ListMessages());
-
-        request.getRequestDispatcher("/").forward(request,response);
+        request.setAttribute("posts", Manager.getAllPost());
+        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
     private void switchTheme(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

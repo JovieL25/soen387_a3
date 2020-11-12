@@ -1,10 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-<<<<<<< HEAD
-Built-By: zhz
-Build-Jdk: 14.0.2
-=======
-Built-By: Ming
+Built-By: lllll
 Build-Jdk: 13.0.2
->>>>>>> jingyi
 
