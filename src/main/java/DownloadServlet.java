@@ -9,18 +9,21 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+
 import com.example.model.Manager;
 import javax.activation.MimetypesFileTypeMap;
 
 import com.example.model.Post;
+import com.example.model.User;
 import org.apache.commons.io.FileUtils;
 
 
 @MultipartConfig
-@WebServlet(name = "A1Servlet")
-public class A1Servlet extends HttpServlet {
+@WebServlet(name = "DownloadServlet")
+public class DownloadServlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
-
+    private static ArrayList<User> Users_list;
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String referer = request.getHeader("Referer");
         if (referer == null) {
@@ -36,6 +39,7 @@ public class A1Servlet extends HttpServlet {
         String download = request.getParameter("download");
         if (download != null)
             downloadMessages(request, response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,8 +57,10 @@ public class A1Servlet extends HttpServlet {
             login(request, response);
 
         String post = request.getParameter("post");
+        /*
         if (post != null)
             postMessage(request, response);
+        */
 
         String clear = request.getParameter("clear");
         if (clear != null)
@@ -68,7 +74,6 @@ public class A1Servlet extends HttpServlet {
         if (switch_theme != null)
             switchTheme(request, response);
 
-        response.setHeader("Expires", "0");
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -104,6 +109,7 @@ public class A1Servlet extends HttpServlet {
         outputStream.flush();
         outputStream.close();
     }
+
 
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user    = request.getParameter("post-id");

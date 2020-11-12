@@ -26,7 +26,7 @@ public class Driver {
 
         Manager.uploadFile("user.xml", "1");
 
-        ArrayList<Post> posts = Manager.getPost("1","","","");
+        ArrayList<Post> posts = Manager.getPost("1","","","","2");
         for(Post p : posts){
             System.out.println(p.getPostId());
             System.out.println(p.getText());
