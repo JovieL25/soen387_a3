@@ -47,6 +47,10 @@ public class A1Servlet extends HttpServlet {
             return;
         }
 
+        String login = request.getParameter("login");
+        if (login != null)
+            login(request, response);
+
         String post = request.getParameter("post");
         if (post != null)
             postMessage(request, response);
@@ -64,6 +68,20 @@ public class A1Servlet extends HttpServlet {
             switchTheme(request, response);
 
         response.setHeader("Expires", "0");
+    }
+
+    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email    = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
+
+        boolean isValid = Manager.authenticate(email, password, usersFile);
+
+        if (isValid)
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        else
+            request.getRequestDispatcher("login.html").forward(request, response);
     }
 
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -101,7 +119,7 @@ public class A1Servlet extends HttpServlet {
 
         request.setAttribute("messages", ChatManager.ListMessages());
 
-        request.getRequestDispatcher("/").forward(request, response);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     private void clearMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

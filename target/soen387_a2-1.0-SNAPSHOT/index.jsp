@@ -24,8 +24,7 @@
 
     <title>Chat Room</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="bootstrap.css">
     <%= "<link rel=\"stylesheet\" href=\"" + (theme.equals("blue") ? "blue-theme.css" : "green-theme.css") + "\">" %>
 </head>
 
