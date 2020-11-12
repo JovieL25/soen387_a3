@@ -1,10 +1,16 @@
-<!DOCTYPE html>
 <html lang="en">
+
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+
+  <title>Login</title>
+
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="login.css">
 </head>
+<<<<<<< HEAD
+=======
 <body>
 
 <form action="A2Servlet" method="POST" class="get-post-form">
@@ -26,6 +32,25 @@
         </div>
     </div>
 </form>
+>>>>>>> jingyi
 
+
+<body class="text-center">
+  <form action="A1Servlet" method="POST" class="form-login">
+    <h1 class="h3 font-weight-normal">Please login</h1>
+    <br>
+
+    <label for="email" class="sr-only">Email</label>
+    <input type="text" id="email" name="email" placeholder="Email" required autofocus class="form-control">
+    <br>
+
+    <label for="password" class="sr-only">Password</label>
+    <input type="password" id="password" name="password" placeholder="Password" required class="form-control">
+    <br>
+
+    <input type="submit" name="login" value="Login" class="btn btn-primary">
+  </form>
 </body>
+
+
 </html>

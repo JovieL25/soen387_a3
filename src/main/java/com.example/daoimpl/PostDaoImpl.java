@@ -22,7 +22,6 @@ import java.util.Set;
 
 @SuppressWarnings("SqlNoDataSourceInspection")
 public class PostDaoImpl implements PostDAO {
-
     @Override
     public Set<Post> getAllPost() {
         Connection connection = DBConnection.getConnection();
@@ -33,8 +32,7 @@ public class PostDaoImpl implements PostDAO {
 
             Set posts = new HashSet();
 
-            while(rs.next())
-            {
+            while(rs.next()) {
                 Post post = extractPostFromResultSet(rs);
                 posts.add(post);
             }

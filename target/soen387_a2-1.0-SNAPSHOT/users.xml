@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<users>
+  <user id="1">
+    <name>Kaixin Dai</name>
+    <email>kaixindai@gmail.com</email>
+    <password>827ccb0eea8a706c4c34a16891f84e7b</password>
+  </user>
+  <user id="2">
+    <name>Tianming Chen</name>
+    <email>tianmingchen@gmail.com</email>
+    <password>827ccb0eea8a706c4c34a16891f84e7b</password>
+  </user>
+  <user id="3">
+    <name>Jingyi Lin</name>
+    <email>jingyilin@gmail.com</email>
+    <password>827ccb0eea8a706c4c34a16891f84e7b</password>
+  </user>
+  <user id="4">
+    <name>Huanzhang Zhu</name>
+    <email>huanzhangzhu@gmail.com</email>
+    <password>827ccb0eea8a706c4c34a16891f84e7b</password>
+  </user>
+</users>
