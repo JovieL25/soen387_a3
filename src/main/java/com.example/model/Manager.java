@@ -25,12 +25,11 @@ import java.util.Set;
 
 public class Manager {
 
-    private static  PostDaoImpl postImpl = new PostDaoImpl();
+    private static PostDaoImpl postImpl = new PostDaoImpl();
 
 
 
-    public static ArrayList<Post> getAllPost(){
-
+    public static ArrayList<Post> getAllPost() {
         return SortPosts(postImpl.getAllPost());
     }
 
@@ -182,7 +181,7 @@ public class Manager {
             sortedArray.add(p);
         }
 
-        Collections.sort(sortedArray,new PostComparator());
+        Collections.sort(sortedArray, new PostComparator());
         Collections.reverse(sortedArray);
 
         return sortedArray;

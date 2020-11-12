@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import com.example.model.Manager;
 import javax.activation.MimetypesFileTypeMap;
 
+import com.example.model.Post;
 import org.apache.commons.io.FileUtils;
 
 
@@ -77,7 +78,6 @@ public class A1Servlet extends HttpServlet {
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
         boolean isValid = Manager.authenticate(email, password, usersFile);
-
         if (isValid)
             request.getRequestDispatcher("index.jsp").forward(request, response);
         else
@@ -106,18 +106,23 @@ public class A1Servlet extends HttpServlet {
     }
 
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user    = request.getParameter("user");
+        String user    = request.getParameter("post-id");
         String message = request.getParameter("message");
 
         int postId = Integer.parseInt(user);
+
+        Post post = new Post();
+        post.setPostId(postId);
+        post.setUserId(1);
+        post.setText(message);
+
+        Manager.createPost(post);
 
         Part part = request.getPart("file");
 
         Manager.insertFile(part, postId);
 
-        ChatManager.PostMessage(user, message);
-
-        request.setAttribute("messages", ChatManager.ListMessages());
+        request.setAttribute("posts", Manager.getAllPost());
 
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
