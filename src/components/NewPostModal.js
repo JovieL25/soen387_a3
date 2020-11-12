@@ -1,15 +1,15 @@
-/* @QUERY */import { render } from "@testing-library/react";
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 
 // https://getbootstrap.com/docs/4.3/components/modal/
 function NewPostModal(props) {
   const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
 
   const handleClose = () => {
     console.log("HANDLE CLOSE");
-    props.setNewPostModalActive(false);
-    console.log("newPostModalActive " + props.newPostModalActive)
+    props.modalClose();
   };
 
   const handlePost = (e) => {
@@ -28,6 +28,7 @@ function NewPostModal(props) {
     var id = props.userId;
     var name = props.userName;
     var txt = text;
+    var tit = title;
     const timeElapsed = Date.now();
     const date = new Date(timeElapsed).toLocaleDateString();
 
@@ -35,13 +36,17 @@ function NewPostModal(props) {
     /* @QUERY */
   }
 
- 
+  useEffect(()=>{
+    console.log("USE EFFECT: TYPE " + props.modalType + ", POSTID " + props.editPostId);
+  })
+
 
   const renderErrorMessage = () => {
     return (
       <div>{errorMsg}</div>
     )
   }
+  
 
   return (
     <div
@@ -51,25 +56,41 @@ function NewPostModal(props) {
       role="dialog"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
+      data-backdrop="static" data-keyboard="false"
     >
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              New Post
+              {props.modalType==="new" ? "NEW POST" : "EDIT POST"}
             </h5>
             <button type="button" className="close" data-dismiss="modal" onClick={handleClose}>
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
 
+          <div className="modal-body ">
 
-          <div className="modal-body">
-            aaa
+            <div className="FILE mb-2">
+              <input type="file" multiple className="form-control-file" id="exampleFormControlFile1"/>
+            </div>
             
+            <div className="TITLE mb-2">
+              <input class="form-control" placeHolder="Title" onChange={(e) => setTitle(e.target.value)}/>
+            </div>
+
+            <div className="CONTENT">
+              <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setText(e.target.value)}></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <span class="btn btn-default btn-file">
+                        <input id="input-2" name="input2[]" type="file" class="file" multiple data-show-upload="true" data-show-caption="true"/>
+                    </span>
+                </div>
+            </div>
             
-            <input type="file" className="form-control-file" id="exampleFormControlFile1" style={{paddingBottom:"50px"}}/>
-            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setText(e.target.value)}></textarea>
             {renderErrorMessage}
           </div>
 
