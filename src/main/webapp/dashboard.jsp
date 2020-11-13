@@ -67,12 +67,11 @@
                 <input form="searchform"  type="submit" name="search" value="Search" class="btn btn-primary">
             </div>
             <form action="DownloadServlet" method="GET" class="get-post-form">
-                <label for="postid">Post ID</label>
-                <input type="text" class="form-control format" id="postid" name="postid" placeholder="Post ID">
+                <label for="download-file-post-id">Post ID</label>
+                <input type="text" class="form-control format" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID">
                 <br>
-                <input class="btn btn-primary" type="submit" name="download" value="Download attachment">
+                <input class="btn btn-primary" type="submit" name="download-file" value="Download Attachment">
             </form>
-
         </div>
 
 

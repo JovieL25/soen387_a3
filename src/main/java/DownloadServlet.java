@@ -23,7 +23,9 @@ import org.apache.commons.io.FileUtils;
 @WebServlet(name = "DownloadServlet")
 public class DownloadServlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
+
     private static ArrayList<User> Users_list;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String referer = request.getHeader("Referer");
         if (referer == null) {
@@ -35,11 +37,12 @@ public class DownloadServlet extends HttpServlet {
 
             return;
         }
-        //TODO: Add a session object or cookie to keep track login user.
-        String download = request.getParameter("download");
-        if (download != null)
-            downloadMessages(request, response);
 
+        //TODO: Add a session object or cookie to keep track login user.
+
+        String download = request.getParameter("download-file");
+        if (download != null)
+            downloadFile(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,7 +52,8 @@ public class DownloadServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath());
             return;
         }
-        if(request.getParameter("signup")!=null){
+
+        if (request.getParameter("signup") != null) {
             request.setAttribute("signupError","1");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
@@ -59,50 +63,40 @@ public class DownloadServlet extends HttpServlet {
             login(request, response);
 
         String search = request.getParameter("search");
-        if (search!=null) {
+        if (search != null) {
 
         }
         String post = request.getParameter("post");
         if (post != null)
             postMessage(request, response);
 
-
-        String clear = request.getParameter("clear");
-        if (clear != null)
-            clearMessages(request, response);
-
         String refresh = request.getParameter("refresh");
         if (refresh != null)
             refresh(request, response);
-
-        String switch_theme = request.getParameter("switch-theme");
-        if (switch_theme != null)
-            switchTheme(request, response);
 
         if (request.getParameter("Logout")!=null)
             request.getRequestDispatcher("login.jsp").forward(request, response);
 
     }
 
-    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email    = request.getParameter("email");
-        String password = request.getParameter("password");
+    private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String email    = request.getParameter("login-email");
+        String password = request.getParameter("login-password");
 
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
         boolean isValid = Manager.authenticate(email, password, usersFile);
-        if (isValid){
-            //request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-            refresh(request,response);
+        if (isValid) {
+            request.setAttribute("posts", Manager.getAllPost());
+
+            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
         }
         else
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
-    private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String from   = request.getParameter("download-from");
-        String to     = request.getParameter("download-to");
-        String format = request.getParameter("postid");
+    private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String format = request.getParameter("download-file-post-id");
 
         int postId = Integer.parseInt(format);
 
@@ -119,7 +113,6 @@ public class DownloadServlet extends HttpServlet {
         outputStream.flush();
         outputStream.close();
     }
-
 
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String title    = request.getParameter("title");
@@ -143,36 +136,8 @@ public class DownloadServlet extends HttpServlet {
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
-    private void clearMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String from = request.getParameter("clear-from");
-        String to   = request.getParameter("clear-to");
-
-        if (!from.equals("") && !to.equals(""))
-            ChatManager.ClearChat(from, to);
-        else
-            ChatManager.ClearChat();
-
-        request.setAttribute("messages", ChatManager.ListMessages());
-
-        request.getRequestDispatcher("/").forward(request, response);
-    }
-
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("posts", Manager.getAllPost());
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
-    }
-
-    private void switchTheme(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        String theme = (String)session.getAttribute("theme");
-        if (theme == null || theme.equals("blue"))
-            session.setAttribute("theme", "green");
-        else
-            session.setAttribute("theme", "blue");
-
-        request.setAttribute("messages", ChatManager.ListMessages());
-
-        request.getRequestDispatcher("/").forward(request,response);
     }
 }
