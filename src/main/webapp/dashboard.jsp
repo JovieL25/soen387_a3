@@ -125,7 +125,7 @@
     </div>
     <!-- END OF FLOAT OBJ -->
 
-    <form id="newpost" action="DownloadServlet" method="POST" class="form-login">
+    <form id="newpost" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
     </form>
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">

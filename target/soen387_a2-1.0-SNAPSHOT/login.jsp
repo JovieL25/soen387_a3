@@ -25,11 +25,11 @@
   <form action="DownloadServlet" method="POST" class="form-login">
 
     <c:if test="${not empty signupError}">
-      <<script>
+      <script>
         window.addEventListener("load",function(){
           alert("Sign up feature not available");
         });
-      </script>>
+      </script>
     </c:if>
 
     <h1 class="h3 font-weight-normal">Please login</h1>
