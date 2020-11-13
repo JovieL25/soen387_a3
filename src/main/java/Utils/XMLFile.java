@@ -96,7 +96,6 @@ public class XMLFile {
         {
             e.printStackTrace();
         }
-        System.out.println(generatedPassword);
 
         return generatedPassword;
     }

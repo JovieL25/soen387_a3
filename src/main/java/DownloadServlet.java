@@ -49,12 +49,13 @@ public class DownloadServlet extends HttpServlet {
 
         }
 
-        String post = request.getParameter("post");
+        String post = request.getParameter("create-post");
         if (post != null)
             createPost(request, response);
 
-        if (request.getParameter("Logout")!=null)
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+        String logout = request.getParameter("logout");
+        if (logout != null)
+            logout(request, response);
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -65,6 +66,8 @@ public class DownloadServlet extends HttpServlet {
 
         User user = Manager.authenticate(email, password, usersFile);
         if (user != null) {
+            request.getSession().setAttribute("user", user);
+
             request.setAttribute("posts", Manager.getAllPost());
 
             request.getRequestDispatcher("dashboard.jsp").forward(request, response);
@@ -73,23 +76,30 @@ public class DownloadServlet extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
+    private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession().setAttribute("user", null);
+
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+    }
+
     private void createPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String title = request.getParameter("title");
-        String text  = request.getParameter("posttext");
+        String title = request.getParameter("create-post-title");
+        String text  = request.getParameter("create-post-text");
 
-        int postId = Integer.parseInt("1");
+        User user = (User)request.getSession().getAttribute("user");
 
-        Post post = new Post();
-        post.setText(title);
-        post.setPostId(postId);
-        post.setUserId(1);
-        post.setText(text);
+        int userId = Integer.parseInt(user.getUserId());
+
+        Post post = new Post(userId, title, text);
 
         Manager.createPost(post);
 
+        int postId = post.getPostId();
+
         Part part = request.getPart("file");
 
-        Manager.insertFile(part, postId);
+        if (part.getSize() > 0)
+            Manager.insertFile(part, postId);
 
         request.setAttribute("posts", Manager.getAllPost());
 

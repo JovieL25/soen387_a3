@@ -22,6 +22,12 @@ public class Post {
         this.updated = false;
     }
 
+    public Post(int userId, String title, String text) {
+        this.userId = userId;
+        this.title = title;
+        this.text = text;
+    }
+
     public Integer getPostId(){return this.postId;}
 
     public Integer getUserId(){return this.userId;}

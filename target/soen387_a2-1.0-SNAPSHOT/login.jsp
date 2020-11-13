@@ -36,7 +36,7 @@
     <input type="password" id="login-password" name="login-password" placeholder="Password" required class="form-control">
     <br>
 
-    <input type="submit" name="login" value="Login" class="btn btn-primary">
+    <input type="submit" name="login" value="Sign in" class="btn btn-primary">
     <input type="submit" name="signup" value="Sign up" class="btn btn-primary">
   </form>
 </body>

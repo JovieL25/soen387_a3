@@ -286,9 +286,12 @@ public class PostDaoImpl implements PostDAO {
             PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
             input = part.getInputStream();
+
+            System.out.println(input == null);
+
             double fileSize = (double)part.getSize();
             String fullFileName = part.getSubmittedFileName();
-            System.out.println(fullFileName);
+            System.out.println(fileSize);
             String[] strs = fullFileName.split("\\.");
 
             String fileName = strs[0];

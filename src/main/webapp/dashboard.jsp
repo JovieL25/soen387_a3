@@ -24,16 +24,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link">User</a>
+                    <a class="nav-link">${user.name}</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link">_USER_ID</a>
+                    <a class="nav-link">${user.userId}</a>
                 </li>
                 <!-- @ACTION LOGOUT BUTTON -->
                 <li class="nav-item">
                     <!-- <a type="button" class="nav-link active">Log out</a>-->
                     <form action="DownloadServlet" method="POST" class="form-login">
-                        <input type="submit" name="Logout" value="Sign out" class="btn btn-primary">
+                        <input type="submit" name="logout" value="Sign out" class="btn btn-primary">
                     </form>
                 </li>
                 <li class="nav-item active dropdown">
@@ -139,11 +139,11 @@
                     </div>
 
                     <div class="TITLE mb-2">
-                        <input name="title" form="newpost" class="form-control" placeHolder="Title"/>
+                        <input name="create-post-title" form="newpost" class="form-control" placeHolder="Title"/>
                     </div>
 
                     <div class="CONTENT">
-                        <textarea name="posttext" form="newpost" class="form-control" id="exampleFormControlTextarea1" rows="3" placeHolder="Description"></textarea>
+                        <textarea name="create-post-text" form="newpost" class="form-control" id="exampleFormControlTextarea1" rows="3" placeHolder="Text"></textarea>
                     </div>
 
                     <!--
@@ -158,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose} > Cancel </button>
-                    <input form="newpost" type="submit" name="post" value="Post" class="btn btn-primary">
+                    <input form="newpost" type="submit" name="create-post" value="Post" class="btn btn-primary">
                 </div>
             </div>
         </div>
