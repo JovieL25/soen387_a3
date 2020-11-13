@@ -58,6 +58,10 @@ public class DownloadServlet extends HttpServlet {
         if (login != null)
             login(request, response);
 
+        String search = request.getParameter("search");
+        if (search!=null) {
+
+        }
         String post = request.getParameter("post");
         if (post != null)
             postMessage(request, response);
@@ -98,7 +102,7 @@ public class DownloadServlet extends HttpServlet {
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String from   = request.getParameter("download-from");
         String to     = request.getParameter("download-to");
-        String format = request.getParameter("download-format");
+        String format = request.getParameter("postid");
 
         int postId = Integer.parseInt(format);
 

@@ -60,29 +60,25 @@
             <div class="my-2 mr-2 my-lg-0">
                 <input form="searchform"  name = "searchhashtag" type="text" class="form-control form-control-sm" placeholder="search post by hashtag"/>
             </div>
-
             <div class="my-2 mr-2 my-lg-0">
                 <input form="searchform"  name = "searchuserid" type="text" class="form-control form-control-sm" placeholder="search post by userid"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
                 <input form="searchform"  type="submit" name="search" value="Search" class="btn btn-primary">
             </div>
-            <!-- @ACTION SEARCH FIELD 2 DATE RANGE -->
-            <!--
-            <div class="my-2 mr-2 my-lg-0">
-                <form onSubmit={handleSearch}>
+            <form action="DownloadServlet" method="GET" class="get-post-form">
+                <label for="postid">Post ID</label>
+                <input type="text" class="form-control format" id="postid" name="postid" placeholder="Post ID">
+                <br>
+                <input class="btn btn-primary" type="submit" name="download" value="Download attachment">
+            </form>
 
-                </form>
-            </div>
-            @ACTION SEARCH FIELD 3 USER ID
-            <div class="my-2 mr-2 my-lg-0">
-                <form onSubmit={handleSearch}>
-
-                </form>
-            </div>
-            -->
         </div>
+
+
     </nav>
+
+
     <!-- END OF NAV BAR -->
 
     <!-- POST CONTAINER -->
@@ -125,7 +121,7 @@
     </div>
     <!-- END OF FLOAT OBJ -->
 
-    <form id="newpost" action="DownloadServlet" method="POST" class="form-login">
+    <form id="newpost" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
     </form>
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
