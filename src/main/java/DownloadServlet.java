@@ -58,11 +58,14 @@ public class DownloadServlet extends HttpServlet {
         if (login != null)
             login(request, response);
 
+        String search = request.getParameter("search");
+        if (search!=null) {
+
+        }
         String post = request.getParameter("post");
-        /*
         if (post != null)
             postMessage(request, response);
-        */
+
 
         String clear = request.getParameter("clear");
         if (clear != null)
@@ -76,9 +79,8 @@ public class DownloadServlet extends HttpServlet {
         if (switch_theme != null)
             switchTheme(request, response);
 
-        System.out.println(request.getParameter("Logout"));
         if (request.getParameter("Logout")!=null)
-            request.getRequestDispatcher("login.html").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
 
     }
 
@@ -93,15 +95,14 @@ public class DownloadServlet extends HttpServlet {
             //request.getRequestDispatcher("dashboard.jsp").forward(request, response);
             refresh(request,response);
         }
-
         else
-            request.getRequestDispatcher("/login.html").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String from   = request.getParameter("download-from");
         String to     = request.getParameter("download-to");
-        String format = request.getParameter("download-format");
+        String format = request.getParameter("postid");
 
         int postId = Integer.parseInt(format);
 
@@ -121,10 +122,10 @@ public class DownloadServlet extends HttpServlet {
 
 
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user    = request.getParameter("post-id");
-        String message = request.getParameter("message");
+        String title    = request.getParameter("title");
+        String message = request.getParameter("posttext");
 
-        int postId = Integer.parseInt(user);
+        int postId = Integer.parseInt("1");
 
         Post post = new Post();
         post.setPostId(postId);
