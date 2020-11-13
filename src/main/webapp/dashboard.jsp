@@ -50,22 +50,37 @@
             </ul>
             <!-- @ACTION SEARCH FIELD 1 HASHTAG -->
             <div class="my-2 mr-2 my-lg-0">
-                <form onSubmit={handleSearch}>
-                    <input type="text" class="form-control form-control-sm" placeholder="search #"/>
+                <form id="searchform" action="DownloadServlet" method="POST" class="form-login">
                 </form>
+            </div>
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform" name = "searchdate" type="text" class="form-control form-control-sm" placeholder="search date 20201112-20201113"/>
+            </div>
+
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  name = "searchhashtag" type="text" class="form-control form-control-sm" placeholder="search post by hashtag"/>
+            </div>
+
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  name = "searchuserid" type="text" class="form-control form-control-sm" placeholder="search post by userid"/>
+            </div>
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  type="submit" name="search" value="Search" class="btn btn-primary">
             </div>
             <!-- @ACTION SEARCH FIELD 2 DATE RANGE -->
+            <!--
             <div class="my-2 mr-2 my-lg-0">
                 <form onSubmit={handleSearch}>
-                    <input type="text" class="form-control form-control-sm" placeholder="search date range"/>
+
                 </form>
             </div>
-            <!-- @ACTION SEARCH FIELD 3 USER ID -->
+            @ACTION SEARCH FIELD 3 USER ID
             <div class="my-2 mr-2 my-lg-0">
                 <form onSubmit={handleSearch}>
-                    <input type="text" class="form-control form-control-sm" placeholder="user id"/>
+
                 </form>
             </div>
+            -->
         </div>
     </nav>
     <!-- END OF NAV BAR -->
@@ -110,6 +125,8 @@
     </div>
     <!-- END OF FLOAT OBJ -->
 
+    <form id="newpost" action="DownloadServlet" method="POST" class="form-login">
+    </form>
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
@@ -123,17 +140,18 @@
                 <div class="modal-body ">
 
                     <div class="FILE mb-2">
-                        <input type="file" multiple class="form-control-file" id="exampleFormControlFile1"/>
+                        <input name="file" form="newpost" type="file" multiple class="form-control-file" id="exampleFormControlFile1"/>
                     </div>
 
                     <div class="TITLE mb-2">
-                        <input class="form-control" placeHolder="Title"/>
+                        <input name="title" form="newpost" class="form-control" placeHolder="Title"/>
                     </div>
 
                     <div class="CONTENT">
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeHolder="Description"></textarea>
+                        <textarea name="posttext" form="newpost" class="form-control" id="exampleFormControlTextarea1" rows="3" placeHolder="Description"></textarea>
                     </div>
 
+                    <!--
                     <div class="form-group">
                         <div class="col-sm-9">
                                 <span class="btn btn-default btn-file">
@@ -141,10 +159,11 @@
                                 </span>
                         </div>
                     </div>
+                    -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose} > Cancel </button>
-                    <button type="button" class="btn btn-secondary" onClick={handlePost}> Post </button>
+                    <input form="newpost" type="submit" name="post" value="Post" class="btn btn-primary">
                 </div>
             </div>
         </div>

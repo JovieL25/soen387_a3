@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.Set;
 //This is the business class
 
-
-
 public class Manager {
 
     private static PostDaoImpl postImpl = new PostDaoImpl();
@@ -200,9 +198,6 @@ public class Manager {
         return postImpl.deleteFile(postId);
     }
 
-
-
-
     public static java.sql.Date parseDate(String date) {
         try {
             java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
@@ -212,8 +207,6 @@ public class Manager {
             return null;
         }
     }
-
-
 
     private static ArrayList<Post> SortPosts(Set<Post> rawPosts){
         ArrayList<Post> sortedArray = new ArrayList<>();

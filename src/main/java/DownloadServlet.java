@@ -59,10 +59,9 @@ public class DownloadServlet extends HttpServlet {
             login(request, response);
 
         String post = request.getParameter("post");
-        /*
         if (post != null)
             postMessage(request, response);
-        */
+
 
         String clear = request.getParameter("clear");
         if (clear != null)
@@ -92,7 +91,6 @@ public class DownloadServlet extends HttpServlet {
             //request.getRequestDispatcher("dashboard.jsp").forward(request, response);
             refresh(request,response);
         }
-
         else
             request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
@@ -120,10 +118,10 @@ public class DownloadServlet extends HttpServlet {
 
 
     private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user    = request.getParameter("post-id");
-        String message = request.getParameter("message");
+        String title    = request.getParameter("title");
+        String message = request.getParameter("posttext");
 
-        int postId = Integer.parseInt(user);
+        int postId = Integer.parseInt("1");
 
         Post post = new Post();
         post.setPostId(postId);
@@ -156,8 +154,6 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        for( Post a : Manager.getAllPost())
-            System.out.println(a.getText());
         request.setAttribute("posts", Manager.getAllPost());
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
