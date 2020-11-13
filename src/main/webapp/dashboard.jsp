@@ -30,7 +30,10 @@
                 </li>
                 <!-- @ACTION LOGOUT BUTTON -->
                 <li class="nav-item">
-                    <a type="button" class="nav-link active">Log out</a>
+                    <!-- <a type="button" class="nav-link active">Log out</a>-->
+                    <form action="DownloadServlet" method="POST" class="form-login">
+                        <input type="submit" name="Logout" value="Sign out" class="btn btn-primary">
+                    </form>
                 </li>
                 <li class="nav-item active dropdown">
                     <a class="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -78,6 +81,7 @@
                         <li class="list-group-item">_FILE 1</li>
                         <li class="list-group-item">_FILE 2</li>
                     </ul>
+
                     <span class="card-text"> _TEXT"#BML Lorem Ipsum is simply #WDF dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.#LOL"
                   </span>
                     <hr/>

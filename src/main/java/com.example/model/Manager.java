@@ -1,9 +1,16 @@
 package com.example.model;
 
 import Utils.PostComparator;
+import Utils.XMLFile;
 import com.example.daoimpl.PostDaoImpl;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.servlet.http.Part;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -18,11 +25,13 @@ import java.util.Set;
 
 public class Manager {
 
-    private static  PostDaoImpl postImpl = new PostDaoImpl();
+    private static PostDaoImpl postImpl = new PostDaoImpl();
 
+    public static ArrayList<Post> getAllPost() {
+        return SortPosts(postImpl.getAllPost());
+    }
 
     public static ArrayList<Post> getAllPost(String number_str){
-
         if(number_str.equals(""))
         {
             return SortPosts(postImpl.getAllPost());
@@ -125,6 +134,38 @@ public class Manager {
         return postImpl.getUser(email,password);
     }
 
+    public static boolean authenticate(String emailTest, String passwordTest, File usersFile) {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+            Document document = documentBuilder.parse(usersFile);
+            document.getDocumentElement().normalize();
+
+            NodeList usersNodeList = document.getElementsByTagName("user");
+            for (int i = 0; i < usersNodeList.getLength(); i++) {
+                Node userNode = usersNodeList.item(i);
+
+                Element userElement = (Element)userNode;
+
+                Node emailNode    = userElement.getElementsByTagName("email").item(0);
+                Node passwordNode = userElement.getElementsByTagName("password").item(0);
+
+                String emailTrue    = emailNode.getTextContent();
+                String passwordTrue = passwordNode.getTextContent();
+
+                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest)))
+                    return true;
+            }
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        return false;
+    }
+
     public static boolean insertFile(Part part, int postId) {
         return postImpl.insertFile(part, postId);
     }
@@ -181,7 +222,7 @@ public class Manager {
             sortedArray.add(p);
         }
 
-        Collections.sort(sortedArray,new PostComparator());
+        Collections.sort(sortedArray, new PostComparator());
         Collections.reverse(sortedArray);
 
         return sortedArray;

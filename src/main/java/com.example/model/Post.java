@@ -12,7 +12,7 @@ public class Post {
 
     public Post(){}
 
-    public Post(Integer postId, Integer userId, String title, Date postDate, Date updateDate,String text){
+    public Post(Integer postId, Integer userId, String title, Date postDate, Date updateDate, String text){
         this.postId = postId;
         this.userId = userId;
         this.title = title;

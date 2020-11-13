@@ -9,9 +9,8 @@
     String format_error = (String)session.getAttribute("format-error");
     session.removeAttribute("format-error");
 
-    String theme = (String)session.getAttribute("theme");
-    if (theme == null)
-        theme = "blue";
+    String theme = (String)session.getAttribute("loginError");
+    if (theme != null)
 %>
 
 
@@ -24,8 +23,7 @@
 
     <title>Chat Room</title>
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="bootstrap.css">
     <%= "<link rel=\"stylesheet\" href=\"" + (theme.equals("blue") ? "blue-theme.css" : "green-theme.css") + "\">" %>
 </head>
 
@@ -83,11 +81,11 @@
 <%--        </form>--%>
 
         <ul class="list-unstyled chat-area">
-            <c:forEach var="message" items="${messages}">
+            <c:forEach var="post" items="${posts}">
                 <li>
-                    <div>${message.user}</div>
-                    <div class="chat-body">${message.text}</div>
-                    <div class="chat-time">${message.dateString}</div>
+                    <div>${post.userId}</div>
+                    <div class="chat-body">${post.text}</div>
+                    <div class="chat-time">${post.postDate}</div>
                 </li>
             </c:forEach>
         </ul>
@@ -102,8 +100,8 @@
 
             <div class="form-row">
                 <div class="form-group col-4">
-                    <label for="user" class="sr-only">Username</label>
-                    <input type="text" class="form-control" id="user" name="user" placeholder="Post ID">
+                    <label for="post-id" class="sr-only">Post ID</label>
+                    <input type="text" class="form-control" id="post-id" name="post-id" placeholder="Post ID">
                 </div>
 
                 <div class="form-group col-1">
