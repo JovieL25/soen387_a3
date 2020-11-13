@@ -76,9 +76,8 @@ public class DownloadServlet extends HttpServlet {
         if (switch_theme != null)
             switchTheme(request, response);
 
-        System.out.println(request.getParameter("Logout"));
         if (request.getParameter("Logout")!=null)
-            request.getRequestDispatcher("login.html").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
 
     }
 
@@ -95,7 +94,7 @@ public class DownloadServlet extends HttpServlet {
         }
 
         else
-            request.getRequestDispatcher("/login.html").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     private void downloadMessages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -157,6 +156,8 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        for( Post a : Manager.getAllPost())
+            System.out.println(a.getText());
         request.setAttribute("posts", Manager.getAllPost());
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
