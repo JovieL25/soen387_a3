@@ -26,18 +26,7 @@ public class DownloadServlet extends HttpServlet {
 
     private static ArrayList<User> Users_list;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String referer = request.getHeader("Referer");
-        if (referer == null) {
-            HttpSession session = request.getSession();
-
-            session.setAttribute("referer-error", "Referer is not present.");
-
-            response.sendRedirect(request.getContextPath());
-
-            return;
-        }
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //TODO: Add a session object or cookie to keep track login user.
 
         String download = request.getParameter("download-file");
@@ -46,13 +35,6 @@ public class DownloadServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String referer = request.getHeader("Referer");
-        if (referer == null) {
-            request.getSession().setAttribute("referer-error", "Referer is not present.");
-            response.sendRedirect(request.getContextPath());
-            return;
-        }
-
         if (request.getParameter("signup") != null) {
             request.setAttribute("signupError","1");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -66,17 +48,13 @@ public class DownloadServlet extends HttpServlet {
         if (search != null) {
 
         }
+
         String post = request.getParameter("post");
         if (post != null)
-            postMessage(request, response);
-
-        String refresh = request.getParameter("refresh");
-        if (refresh != null)
-            refresh(request, response);
+            createPost(request, response);
 
         if (request.getParameter("Logout")!=null)
             request.getRequestDispatcher("login.jsp").forward(request, response);
-
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -85,14 +63,37 @@ public class DownloadServlet extends HttpServlet {
 
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
-        boolean isValid = Manager.authenticate(email, password, usersFile);
-        if (isValid) {
+        User user = Manager.authenticate(email, password, usersFile);
+        if (user != null) {
             request.setAttribute("posts", Manager.getAllPost());
 
             request.getRequestDispatcher("dashboard.jsp").forward(request, response);
         }
         else
             request.getRequestDispatcher("login.jsp").forward(request, response);
+    }
+
+    private void createPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String title = request.getParameter("title");
+        String text  = request.getParameter("posttext");
+
+        int postId = Integer.parseInt("1");
+
+        Post post = new Post();
+        post.setText(title);
+        post.setPostId(postId);
+        post.setUserId(1);
+        post.setText(text);
+
+        Manager.createPost(post);
+
+        Part part = request.getPart("file");
+
+        Manager.insertFile(part, postId);
+
+        request.setAttribute("posts", Manager.getAllPost());
+
+        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -112,32 +113,5 @@ public class DownloadServlet extends HttpServlet {
         outputStream.write(FileUtils.readFileToByteArray(file));
         outputStream.flush();
         outputStream.close();
-    }
-
-    private void postMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String title    = request.getParameter("title");
-        String message = request.getParameter("posttext");
-
-        int postId = Integer.parseInt("1");
-
-        Post post = new Post();
-        post.setPostId(postId);
-        post.setUserId(1);
-        post.setText(message);
-
-        Manager.createPost(post);
-
-        Part part = request.getPart("file");
-
-        Manager.insertFile(part, postId);
-
-        request.setAttribute("posts", Manager.getAllPost());
-
-        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
-    }
-
-    private void refresh(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("posts", Manager.getAllPost());
-        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 }

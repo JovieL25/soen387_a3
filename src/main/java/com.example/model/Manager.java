@@ -132,7 +132,7 @@ public class Manager {
         return postImpl.getUser(email,password);
     }
 
-    public static boolean authenticate(String emailTest, String passwordTest, File usersFile) {
+    public static User authenticate(String emailTest, String passwordTest, File usersFile) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -147,21 +147,26 @@ public class Manager {
 
                 Element userElement = (Element)userNode;
 
+                Node idNode       = userElement.getElementsByTagName("id").item(0);
+                Node nameNode     = userElement.getElementsByTagName("name").item(0);
                 Node emailNode    = userElement.getElementsByTagName("email").item(0);
                 Node passwordNode = userElement.getElementsByTagName("password").item(0);
 
+                String id           = idNode.getTextContent();
+                String name         = nameNode.getTextContent();
                 String emailTrue    = emailNode.getTextContent();
                 String passwordTrue = passwordNode.getTextContent();
 
-                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest)))
-                    return true;
+                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest))) {
+                    return new User(id, name, emailTrue, passwordTrue);
+                }
             }
         }
         catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     public static boolean insertFile(Part part, int postId) {
