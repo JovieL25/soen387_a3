@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.model.Manager;
 import javax.activation.MimetypesFileTypeMap;
@@ -24,11 +25,7 @@ import org.apache.commons.io.FileUtils;
 public class DownloadServlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
-    private static ArrayList<User> Users_list;
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //TODO: Add a session object or cookie to keep track login user.
-
         String download = request.getParameter("download-file");
         if (download != null)
             downloadFile(request, response);
@@ -68,9 +65,10 @@ public class DownloadServlet extends HttpServlet {
         if (user != null) {
             request.getSession().setAttribute("user", user);
 
-            request.setAttribute("posts", Manager.getAllPost());
+            List<Post> posts = Manager.getAllPost().subList(0, 10);
+            request.setAttribute("posts", posts);
 
-            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
         else
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -101,9 +99,10 @@ public class DownloadServlet extends HttpServlet {
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
 
-        request.setAttribute("posts", Manager.getAllPost());
+        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        request.setAttribute("posts", posts);
 
-        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -1,9 +1,7 @@
-body {
-    background: -webkit-linear-gradient(45deg, rgb(220, 161, 255)0%, rgb(214, 219, 255) 33%, rgb(252, 229, 247) 66%, rgb(255, 179, 179) 100%); ;
+body {;
     height: 100vh;
     height: 100%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: -webkit-linear-gradient(45deg, rgb(220, 161, 255) 0%, rgb(214, 219, 255) 33%, rgb(252, 229, 247) 66%, rgb(255, 179, 179) 100%) no-repeat fixed;
 }
 
 ::-webkit-scrollbar {
