@@ -5,6 +5,7 @@
   Time: 4:06 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -75,16 +76,26 @@
         <div class="post">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title"><strong>_TITLE</strong> <span class="badge badge-secondary">_USER_ID</span></h4>
-                    <h6 class="card-subtitle text-muted mb-2">_DATE</h6>
+
+
+                    <!--
                     <ul class="list-group list-group-flush mb-2">
                         <li class="list-group-item">_FILE 1</li>
                         <li class="list-group-item">_FILE 2</li>
                     </ul>
-
+                    -->
+                    <c:forEach var="post" items="${posts}">
+                        <h4 class="card-title"><strong>_TITLE</strong> <span class="badge badge-secondary">${post.userId}</span></h4>
+                        <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
+                    <span class="card-text">${post.text}</span>
+                        <hr/>
+                    </c:forEach>
+                    <!--
                     <span class="card-text"> _TEXT"#BML Lorem Ipsum is simply #WDF dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.#LOL"
                   </span>
-                    <hr/>
+                    <span class="card-text"> _TEXT"#BML Lorem Ipsum is simply #WDF dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.#LOL"
+                  </span>
+                  -->
                     <div class="owner action">
                         <button class="btn btn-danger mr-2"> DELETE</button>
                         <button class="btn btn-info" data-toggle="modal" data-target="#newPostModal">EDIT</button>

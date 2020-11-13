@@ -9,8 +9,7 @@
     String format_error = (String)session.getAttribute("format-error");
     session.removeAttribute("format-error");
 
-    String theme = (String)session.getAttribute("loginError");
-    if (theme != null)
+
 %>
 
 
