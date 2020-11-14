@@ -176,6 +176,10 @@ public class Manager {
         return postImpl.insertFile(part, postId);
     }
 
+    public static boolean updateFile(Part part, int postId) {
+        return postImpl.updateFile(part, postId);
+    }
+
     public static File selectFile(int postId) {
         File file = null;
 
@@ -200,9 +204,7 @@ public class Manager {
         return postImpl.changeFile(filePath,postId);
     }
 
-    public static boolean deleteFile(String postId_str){
-        Integer postId = Integer.parseInt(postId_str);
-
+    public static boolean deleteFile(int postId) {
         return postImpl.deleteFile(postId);
     }
 

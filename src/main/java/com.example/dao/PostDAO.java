@@ -26,6 +26,8 @@ public interface PostDAO {
 
     boolean insertFile(Part part, int postId);
 
+    boolean updateFile(Part part, int postId);
+
     File selectFile(int postId) throws SQLException;
 
     boolean uploadFile(String filePath, Integer postId);

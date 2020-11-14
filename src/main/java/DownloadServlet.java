@@ -108,17 +108,12 @@ public class DownloadServlet extends HttpServlet {
 
         int postId = post.getPostId();
 
-        Part part = request.getPart("file");
+        Part part = request.getPart("create-post-file");
 
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
 
-        List<Post> posts;
-        if(Manager.getAllPost().size() > 10)
-            posts = Manager.getAllPost().subList(0, 10);
-        else
-            posts = Manager.getAllPost();
-        request.setAttribute("posts", posts);
+        displayPosts(request, Manager.getAllPost(), 10);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -142,14 +137,18 @@ public class DownloadServlet extends HttpServlet {
             post.setText(text);
 
             Manager.updatePost(post);
+
+            Part part = request.getPart("update-post-file");
+            if (part.getSize() > 0) {
+                File file = Manager.selectFile(postId);
+                if (file != null)
+                    Manager.updateFile(part, postId);
+                else
+                    Manager.insertFile(part, postId);
+            }
         }
 
-        List<Post> posts;
-        if(Manager.getAllPost().size() > 10)
-            posts = Manager.getAllPost().subList(0, 10);
-        else
-            posts = Manager.getAllPost();
-        request.setAttribute("posts", posts);
+        displayPosts(request, Manager.getAllPost(), 10);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -166,8 +165,11 @@ public class DownloadServlet extends HttpServlet {
         User currentUser = (User)request.getSession().getAttribute("user");
 
         int currentUserId = Integer.parseInt(currentUser.getUserId());
-        if (currentUserId == userId)
+        if (currentUserId == userId) {
             Manager.deletePost(postId);
+
+            Manager.deleteFile(postId);
+        }
 
         displayPosts(request, Manager.getAllPost(), 10);
 
@@ -189,23 +191,29 @@ public class DownloadServlet extends HttpServlet {
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
 
-    private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String format = request.getParameter("download-file-post-id");
+    private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String postIdString = request.getParameter("download-file-post-id");
 
-        int postId = Integer.parseInt(format);
+        int postId = Integer.parseInt(postIdString);
 
         File file = Manager.selectFile(postId);
+        if (file != null) {
+            String contentType = mimetypesFileTypeMap.getContentType(file);
+            response.setContentType(contentType);
 
-        String contentType = mimetypesFileTypeMap.getContentType(file);
-        response.setContentType(contentType);
+            String fileName = file.getName();
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
-        String fileName = file.getName();
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(FileUtils.readFileToByteArray(file));
+            outputStream.flush();
+            outputStream.close();
+        }
+        else {
+            displayPosts(request, Manager.getAllPost(), 10);
 
-        OutputStream outputStream = response.getOutputStream();
-        outputStream.write(FileUtils.readFileToByteArray(file));
-        outputStream.flush();
-        outputStream.close();
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
+        }
     }
 
     private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts) {

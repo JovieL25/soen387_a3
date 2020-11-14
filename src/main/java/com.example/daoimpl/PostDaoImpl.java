@@ -59,7 +59,6 @@ public class PostDaoImpl implements PostDAO {
         String text = null;
         Date postDate = null;
         Date modifiedDate = null;
-        boolean isModified = false;
 
         try {
             Connection connection = DBConnection.getConnection();
@@ -333,7 +332,6 @@ public class PostDaoImpl implements PostDAO {
 
             double fileSize = (double)part.getSize();
             String fullFileName = part.getSubmittedFileName();
-            System.out.println(fileSize);
             String[] strs = fullFileName.split("\\.");
 
             String fileName = strs[0];
@@ -376,24 +374,92 @@ public class PostDaoImpl implements PostDAO {
     }
 
     @Override
-    public File selectFile(int postId) throws SQLException {
+    public boolean updateFile(Part part, int postId) {
         Connection connection = DBConnection.getConnection();
+        InputStream input = null;
 
-        String query = "SELECT * FROM files WHERE post_id=?";
+        try{
+            String query = "UPDATE files SET content=?, file_name=?, file_size=?, media_type=? WHERE post_id=?";
+            // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
+            PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
-        PreparedStatement statement = connection.prepareStatement(query);
+            input = part.getInputStream();
 
-        statement.setInt(1, postId);
+            double fileSize = (double)part.getSize();
+            String fullFileName = part.getSubmittedFileName();
+            String[] strs = fullFileName.split("\\.");
 
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
+            String fileName = strs[0];
+            String mediaType = strs[1];
 
-        String baseName  = resultSet.getString("file_name");
-        String extension = resultSet.getString("media_type");
+            ps.setBinaryStream(1,input);
+            ps.setString(2, fileName);
+            ps.setDouble(3, fileSize);
+            ps.setString(4, mediaType);
+            ps.setInt(5, postId);
 
-        byte[] bytes = resultSet.getBytes("content");
 
-        connection.close();
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public File selectFile(int postId) throws SQLException {
+        byte[] bytes = null;
+        String baseName = null;
+        String extension = null;
+
+        try {
+            Connection connection = DBConnection.getConnection();
+
+            String query = "SELECT * FROM files WHERE post_id=?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            statement.setInt(1, postId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                bytes = resultSet.getBytes("content");
+
+                baseName  = resultSet.getString("file_name");
+                extension = resultSet.getString("media_type");
+
+                connection.close();
+            }
+            else {
+                connection.close();
+
+                return null;
+            }
+        }
+            catch (SQLException exception) {
+            exception.printStackTrace();
+        }
 
         File file = new File(baseName + "." + extension);
 

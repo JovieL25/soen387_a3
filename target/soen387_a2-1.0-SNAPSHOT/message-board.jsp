@@ -146,7 +146,7 @@
                 <div class="modal-body ">
 
                     <div class="FILE mb-2">
-                        <input name="file" form="newpost" type="file" multiple class="form-control-file" id="exampleFormControlFile1"/>
+                        <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
                     </div>
 
                     <div class="TITLE mb-2">
@@ -178,7 +178,7 @@
                 <div class="modal-body ">
 
                     <div class="FILE mb-2">
-                        <input name="file" form="edit_delete_post" type="file" multiple class="form-control-file"/>
+                        <input name="update-post-file" form="edit_delete_post" type="file" class="form-control-file"/>
                     </div>
 
                     <div class="TITLE mb-2">
