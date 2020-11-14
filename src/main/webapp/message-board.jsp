@@ -105,8 +105,12 @@
                         <hr/>
                     </c:forEach>
                     <div class="owner action">
-                        <button class="btn btn-danger mr-2"> DELETE</button>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#newPostModal">EDIT</button>
+                        <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
+                        </form>
+                        <input form="edit_delete_post" type="submit" name="delete-post" value="DELETE" class="btn btn-danger mr-2">
+                        <!-- <button class="btn btn-danger mr-2"> DELETE</button> -->
+                        <button class="btn btn-info" data-toggle="modal" data-target="#editPostModal">EDIT</button>
+                        <input form="edit_delete_post" required="required" name = "update-delete-post-id" type="number" class="form-control form-control-sm" placeholder="Post ID"/>
                     </div>
                 </div>
             </div>
@@ -149,15 +153,6 @@
                         <textarea name="create-post-text" form="newpost" class="form-control" id="exampleFormControlTextarea1" rows="3" placeHolder="Text"></textarea>
                     </div>
 
-                    <!--
-                    <div class="form-group">
-                        <div class="col-sm-9">
-                                <span class="btn btn-default btn-file">
-                                    <input id="input-2" name="input2[]" type="file" class="file" multiple data-show-upload="true" data-show-caption="true"/>
-                                </span>
-                        </div>
-                    </div>
-                    -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose} > Cancel </button>
@@ -167,6 +162,36 @@
         </div>
     </div>
 
+    <div class="modal fade" id="editPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editing POST</h5>
+                    <button type="button" class="close" data-dismiss="modal" onClick={handleClose}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">
+
+                    <div class="FILE mb-2">
+                        <input name="file" form="edit_delete_post" type="file" multiple class="form-control-file"/>
+                    </div>
+
+                    <div class="TITLE mb-2">
+                        <input name="update-post-title" form="edit_delete_post" class="form-control" placeHolder="Title"/>
+                    </div>
+
+                    <div class="CONTENT">
+                        <textarea name="update-post-text" form="edit_delete_post" class="form-control" rows="3" placeHolder="Text"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose} > Cancel </button>
+                    <input form="edit_delete_post" type="submit" name="update-post" value="Post" class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>

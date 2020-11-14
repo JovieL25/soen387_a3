@@ -74,8 +74,11 @@ public class DownloadServlet extends HttpServlet {
         User user = Manager.authenticate(email, password, usersFile);
         if (user != null) {
             request.getSession().setAttribute("user", user);
-
-            List<Post> posts = Manager.getAllPost().subList(0, 10);
+            List<Post> posts=null;
+            if(Manager.getAllPost().size()>10)
+                posts = Manager.getAllPost().subList(0, 10);
+            else
+                posts = Manager.getAllPost();
             request.setAttribute("posts", posts);
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
@@ -109,16 +112,21 @@ public class DownloadServlet extends HttpServlet {
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
 
-        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        List<Post> posts=null;
+        if(Manager.getAllPost().size()>10)
+            posts = Manager.getAllPost().subList(0, 10);
+        else
+            posts = Manager.getAllPost();
         request.setAttribute("posts", posts);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
 
     private void updatePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String postIdString = request.getParameter("update-post-post-id");
+        String postIdString = request.getParameter("update-delete-post-id");
         String title        = request.getParameter("update-post-title");
         String text         = request.getParameter("update-post-text");
+        System.out.println("Updating "+postIdString+"\n"+title+"\n"+text);
 
         int postId = Integer.parseInt(postIdString);
 
@@ -129,20 +137,29 @@ public class DownloadServlet extends HttpServlet {
 
         Manager.updatePost(post);
 
-        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        List<Post> posts=null;
+        if(Manager.getAllPost().size()>10)
+            posts = Manager.getAllPost().subList(0, 10);
+        else
+            posts = Manager.getAllPost();
         request.setAttribute("posts", posts);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
 
     private void deletePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String postIdString = request.getParameter("delete-post-post-id");
-
+        //TODO: Only the author can delete his/her post, we should also request userid.
+        String postIdString = request.getParameter("update-delete-post-id");
+        System.out.println("Deleting "+postIdString);
         int postId = Integer.parseInt(postIdString);
 
         Manager.deletePost(postId);
 
-        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        List<Post> posts=null;
+        if(Manager.getAllPost().size()>10)
+            posts = Manager.getAllPost().subList(0, 10);
+        else
+            posts = Manager.getAllPost();
         request.setAttribute("posts", posts);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
