@@ -50,23 +50,27 @@
             </ul>
             <!-- @ACTION SEARCH FIELD 1 HASHTAG -->
             <div class="my-2 mr-2 my-lg-0">
-                <form id="searchform" action="DownloadServlet" method="POST" class="form-login">
-                </form>
+                <form id="searchform" action="DownloadServlet" method="POST" class="form-login"></form>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" name = "searchdate" type="text" class="form-control form-control-sm" placeholder="search date 20201112-20201113"/>
-            </div>
-
-            <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  name = "searchhashtag" type="text" class="form-control form-control-sm" placeholder="search post by hashtag"/>
+                <input form="searchform"  name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  name = "searchuserid" type="text" class="form-control form-control-sm" placeholder="search post by userid"/>
+                <input form="searchform" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  type="submit" name="search" value="Search" class="btn btn-primary">
+                <input form="searchform" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
             </div>
-            <form action="DownloadServlet" method="GET" class="get-post-form">
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
+            </div>
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  name = "search-post-num-string" type="text" class="form-control form-control-sm" placeholder="#num_string"/>
+            </div>
+            <div class="my-2 mr-2 my-lg-0">
+                <input form="searchform"  type="submit" name="search-post" value="Search" class="btn btn-primary">
+            </div>
+            <form action="DownloadServlet" method="POST" class="get-post-form">
                 <label for="download-file-post-id">Post ID</label>
                 <input type="text" class="form-control format" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID">
                 <br>

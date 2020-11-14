@@ -1,23 +1,22 @@
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
+import com.example.model.Manager;
+import com.example.model.Post;
+import com.example.model.User;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.model.Manager;
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.servlet.ServletException;
 
-import com.example.model.Post;
-import com.example.model.User;
 import org.apache.commons.io.FileUtils;
 
 
@@ -26,26 +25,18 @@ import org.apache.commons.io.FileUtils;
 public class DownloadServlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String download = request.getParameter("download-file");
-        if (download != null)
-            downloadFile(request, response);
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("signup") != null) {
-            request.setAttribute("signupError","1");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
+        String register = request.getParameter("register");
+        if (register != null)
+            register(request, response);
 
         String login = request.getParameter("login");
         if (login != null)
             login(request, response);
 
-        String search = request.getParameter("search");
-        if (search != null) {
-
-        }
+        String logout = request.getParameter("logout");
+        if (logout != null)
+            logout(request, response);
 
         String createPost = request.getParameter("create-post");
         if (createPost != null)
@@ -55,13 +46,23 @@ public class DownloadServlet extends HttpServlet {
         if (updatePost != null)
             updatePost(request, response);
 
-        String deletePost = request.getParameter("edit-post");
+        String deletePost = request.getParameter("delete-post");
         if (deletePost != null)
             deletePost(request, response);
 
-        String logout = request.getParameter("logout");
-        if (logout != null)
-            logout(request, response);
+        String searchPost = request.getParameter("search-post");
+        if (searchPost != null)
+            searchPost(request, response);
+
+        String downloadFile = request.getParameter("download-file");
+        if (downloadFile != null)
+            downloadFile(request, response);
+    }
+
+    private void register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.setAttribute("signupError","1");
+
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -142,6 +143,21 @@ public class DownloadServlet extends HttpServlet {
         Manager.deletePost(postId);
 
         List<Post> posts = Manager.getAllPost().subList(0, 10);
+        request.setAttribute("posts", posts);
+
+        request.getRequestDispatcher("message-board.jsp").forward(request, response);
+    }
+
+    private void searchPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String userIdString = request.getParameter("search-post-user-id");
+        String dateFrom     = request.getParameter("search-post-date-from");
+        String dateTo       = request.getParameter("search-post-date-to");
+        String hashTag      = request.getParameter("search-post-hash-tag");
+        String numString    = request.getParameter("search-post-num-string");
+
+        int userId = Integer.parseInt(userIdString);
+
+        ArrayList<Post> posts = Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString);
         request.setAttribute("posts", posts);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);

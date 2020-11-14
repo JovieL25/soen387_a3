@@ -37,7 +37,7 @@
     <br>
 
     <input type="submit" name="login" value="Sign in" class="btn btn-primary">
-    <input type="submit" name="signup" value="Sign up" class="btn btn-primary">
+    <input type="submit" name="register" value="Sign up" class="btn btn-primary">
   </form>
 </body>
 
