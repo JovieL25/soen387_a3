@@ -99,7 +99,11 @@
                     </ul>
                     -->
                     <c:forEach var="post" items="${posts}">
-                        <h4 class="card-title"><strong>${post.title}</strong> <span class="badge badge-secondary">${post.userId}</span></h4>
+                        <h4 class="card-title">
+                            <strong>${post.title}</strong>
+                            <span class="badge badge-secondary">Post ID: ${post.postId}</span>
+                            <span class="badge badge-secondary">User ID: ${post.userId}</span>
+                        </h4>
                         <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
                     <span class="card-text">${post.text}</span>
                         <hr/>

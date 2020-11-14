@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.servlet.ServletException;
 
+import com.google.protobuf.Enum;
 import org.apache.commons.io.FileUtils;
 
 
@@ -112,8 +113,8 @@ public class DownloadServlet extends HttpServlet {
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
 
-        List<Post> posts=null;
-        if(Manager.getAllPost().size()>10)
+        List<Post> posts;
+        if(Manager.getAllPost().size() > 10)
             posts = Manager.getAllPost().subList(0, 10);
         else
             posts = Manager.getAllPost();
@@ -126,19 +127,25 @@ public class DownloadServlet extends HttpServlet {
         String postIdString = request.getParameter("update-delete-post-id");
         String title        = request.getParameter("update-post-title");
         String text         = request.getParameter("update-post-text");
-        System.out.println("Updating "+postIdString+"\n"+title+"\n"+text);
 
         int postId = Integer.parseInt(postIdString);
 
         Post post = Manager.getPost(postId);
 
-        post.setTitle(title);
-        post.setText(text);
+        int userId = post.getUserId();
 
-        Manager.updatePost(post);
+        User currentUser = (User)request.getSession().getAttribute("user");
 
-        List<Post> posts=null;
-        if(Manager.getAllPost().size()>10)
+        int currentUserId = Integer.parseInt(currentUser.getUserId());
+        if (currentUserId == userId) {
+            post.setTitle(title);
+            post.setText(text);
+
+            Manager.updatePost(post);
+        }
+
+        List<Post> posts;
+        if(Manager.getAllPost().size() > 10)
             posts = Manager.getAllPost().subList(0, 10);
         else
             posts = Manager.getAllPost();
@@ -148,19 +155,21 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void deletePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //TODO: Only the author can delete his/her post, we should also request userid.
         String postIdString = request.getParameter("update-delete-post-id");
-        System.out.println("Deleting "+postIdString);
+
         int postId = Integer.parseInt(postIdString);
 
-        Manager.deletePost(postId);
+        Post post = Manager.getPost(postId);
 
-        List<Post> posts=null;
-        if(Manager.getAllPost().size()>10)
-            posts = Manager.getAllPost().subList(0, 10);
-        else
-            posts = Manager.getAllPost();
-        request.setAttribute("posts", posts);
+        int userId = post.getUserId();
+
+        User currentUser = (User)request.getSession().getAttribute("user");
+
+        int currentUserId = Integer.parseInt(currentUser.getUserId());
+        if (currentUserId == userId)
+            Manager.deletePost(postId);
+
+        displayPosts(request, Manager.getAllPost(), 10);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -197,5 +206,12 @@ public class DownloadServlet extends HttpServlet {
         outputStream.write(FileUtils.readFileToByteArray(file));
         outputStream.flush();
         outputStream.close();
+    }
+
+    private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts) {
+        if(posts.size() > numPosts)
+            request.setAttribute("posts", posts.subList(0, numPosts));
+        else
+            request.setAttribute("posts", posts);
     }
 }
