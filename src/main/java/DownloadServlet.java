@@ -26,6 +26,15 @@ import org.apache.commons.io.FileUtils;
 public class DownloadServlet extends HttpServlet {
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        User user = (User)request.getSession().getAttribute("user");
+        if(user!=null){
+            String numPosts = request.getParameter("numPosts");
+            displayPosts(request, Manager.getAllPost(), Integer.parseInt(numPosts));
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String register = request.getParameter("register");
         if (register != null)
