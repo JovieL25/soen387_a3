@@ -42,9 +42,9 @@
                     </a>
                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" href="#">5</a>
-                        <a class="dropdown-item" href="#">10</a>
-                        <a class="dropdown-item" href="#">20</a>
+                        <a class="dropdown-item" href="DownloadServlet?numPosts=5">5</a>
+                        <a class="dropdown-item" href="DownloadServlet?numPosts=10">10</a>
+                        <a class="dropdown-item" href="DownloadServlet?numPosts=20">20</a>
                     </div>
                 </li>
             </ul>
@@ -91,30 +91,43 @@
             <div class="card">
                 <div class="card-body">
 
-
-                    <!--
-                    <ul class="list-group list-group-flush mb-2">
-                        <li class="list-group-item">_FILE 1</li>
-                        <li class="list-group-item">_FILE 2</li>
-                    </ul>
-                    -->
                     <c:forEach var="post" items="${posts}">
                         <h4 class="card-title">
-                            <strong>${post.title}</strong>
+                            <span><strong>${post.title}</strong></span>
                             <span class="badge badge-secondary">Post ID: ${post.postId}</span>
-                            <span class="badge badge-secondary">User ID: ${post.userId}</span>
+                            <div>
+                                <li class="nav-item active dropdown">
+                                    <a class="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </a>
+                                    <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <c:if test="${post.userId==user.userId}">
+                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item" href="#">Delete</a>
+                                        </c:if>
+
+                                        <c:if test="${post.userId!=user.userId}">
+                                            <a class="dropdown-item" href="#">More</a>
+                                        </c:if>
+
+                                    </div>
+                                </li>
+                            </div>
+
+                            <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
                         </h4>
                         <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
                     <span class="card-text">${post.text}</span>
                         <hr/>
                     </c:forEach>
+
                     <div class="owner action">
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
                         <input form="edit_delete_post" type="submit" name="delete-post" value="DELETE" class="btn btn-danger mr-2">
                         <!-- <button class="btn btn-danger mr-2"> DELETE</button> -->
                         <button class="btn btn-info" data-toggle="modal" data-target="#editPostModal">EDIT</button>
-                        <input form="edit_delete_post" required="required" name = "update-delete-post-id" type="number" class="form-control form-control-sm" placeholder="Post ID"/>
+                        <input form="edit_delete_post" required="required" name = "update-delete-post-id" type="number" class="my-2 mr-2 my-lg-0" placeholder="Post ID"/>
                     </div>
                 </div>
             </div>
