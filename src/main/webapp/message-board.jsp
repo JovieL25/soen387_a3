@@ -27,7 +27,7 @@
                     <a class="nav-link">${user.name}</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link">${user.userId}</a>
+                    <a class="nav-link">User ID: ${user.userId}</a>
                 </li>
                 <!-- @ACTION LOGOUT BUTTON -->
                 <li class="nav-item">

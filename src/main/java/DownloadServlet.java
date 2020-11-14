@@ -1,3 +1,4 @@
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -46,9 +47,17 @@ public class DownloadServlet extends HttpServlet {
 
         }
 
-        String post = request.getParameter("create-post");
-        if (post != null)
+        String createPost = request.getParameter("create-post");
+        if (createPost != null)
             createPost(request, response);
+
+        String updatePost = request.getParameter("update-post");
+        if (updatePost != null)
+            updatePost(request, response);
+
+        String deletePost = request.getParameter("edit-post");
+        if (deletePost != null)
+            deletePost(request, response);
 
         String logout = request.getParameter("logout");
         if (logout != null)
@@ -98,6 +107,39 @@ public class DownloadServlet extends HttpServlet {
 
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
+
+        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        request.setAttribute("posts", posts);
+
+        request.getRequestDispatcher("message-board.jsp").forward(request, response);
+    }
+
+    private void updatePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String postIdString = request.getParameter("update-post-post-id");
+        String title        = request.getParameter("update-post-title");
+        String text         = request.getParameter("update-post-text");
+
+        int postId = Integer.parseInt(postIdString);
+
+        Post post = Manager.getPost(postId);
+
+        post.setTitle(title);
+        post.setText(text);
+
+        Manager.updatePost(post);
+
+        List<Post> posts = Manager.getAllPost().subList(0, 10);
+        request.setAttribute("posts", posts);
+
+        request.getRequestDispatcher("message-board.jsp").forward(request, response);
+    }
+
+    private void deletePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String postIdString = request.getParameter("delete-post-post-id");
+
+        int postId = Integer.parseInt(postIdString);
+
+        Manager.deletePost(postId);
 
         List<Post> posts = Manager.getAllPost().subList(0, 10);
         request.setAttribute("posts", posts);

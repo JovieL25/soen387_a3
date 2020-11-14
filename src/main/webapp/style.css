@@ -1,5 +1,4 @@
 body {;
-    height: 100vh;
     height: 100%;
     background: -webkit-linear-gradient(45deg, rgb(220, 161, 255) 0%, rgb(214, 219, 255) 33%, rgb(252, 229, 247) 66%, rgb(255, 179, 179) 100%) no-repeat fixed;
 }
@@ -24,5 +23,3 @@ body {;
     border-radius: 4px;
     max-width: 500px;
 }
-
-/* -webkit-linear-gradient(45deg, rgba(255, 0, 89, 1) 0%, rgba(0, 179, 255, 1) 33%, rgba(255, 0, 89, 1) 66%, rgba(0, 179, 255, 1) 100%); */

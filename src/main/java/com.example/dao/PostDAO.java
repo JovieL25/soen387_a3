@@ -12,6 +12,8 @@ public interface PostDAO {
 
     Set<Post> getAllPost();
 
+    Post selectPost(int postId);
+
     Set<Post> getPost(String userId,String startDate,String endDate,String hashTag);
 
     boolean createPost(Post post);

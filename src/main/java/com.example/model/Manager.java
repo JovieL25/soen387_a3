@@ -106,6 +106,10 @@ public class Manager {
         }
     }
 
+    public static Post getPost(int postId) {
+        return postImpl.selectPost(postId);
+    }
+
     public static boolean updatePost(Post post){
         if(postImpl.updatePost(post)){
             return true;
@@ -115,8 +119,7 @@ public class Manager {
         }
     }
 
-    public static boolean deletePost(String postId_str){
-        Integer postId = Integer.parseInt(postId_str);
+    public static boolean deletePost(int postId){
         if(postImpl.deletePost(postId)){
             return true;
         }

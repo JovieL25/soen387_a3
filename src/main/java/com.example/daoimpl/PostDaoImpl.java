@@ -53,6 +53,48 @@ public class PostDaoImpl implements PostDAO {
     }
 
     @Override
+    public Post selectPost(int postId) {
+        int userId = 0;
+        String title = null;
+        String text = null;
+        Date postDate = null;
+        Date modifiedDate = null;
+        boolean isModified = false;
+
+        try {
+            Connection connection = DBConnection.getConnection();
+
+            String query = "SELECT * FROM posts WHERE post_id=?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            statement.setInt(1, postId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                userId       = resultSet.getInt("user_id");
+                title        = resultSet.getString("title");
+                text         = resultSet.getString("text");
+                postDate     = resultSet.getDate("post_date");
+                modifiedDate = resultSet.getDate("update_date");
+
+                connection.close();
+            }
+            else {
+                connection.close();
+
+                return null;
+            }
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        return new Post(postId, userId, title, postDate, modifiedDate, text);
+    }
+
+    @Override
     public Set<Post> getPost(String userId, String startDate, String endDate, String hashTag) {
 
         Connection connection = DBConnection.getConnection();
