@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="style.css">
+
 </head>
 
 
@@ -95,6 +96,9 @@
                         <h4 class="card-title">
                             <span><strong>${post.title}</strong></span>
                             <span class="badge badge-secondary">Post ID: ${post.postId}</span>
+                            <c:if test="${post.updated==true}">
+                                <span class="badge badge-secondary">Edited</span>
+                            </c:if>
                             <div>
                                 <li class="nav-item active dropdown">
                                     <a class="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,8 +106,9 @@
                                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <c:if test="${post.userId==user.userId}">
-                                            <a class="dropdown-item" href="#">Edit</a>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a id= "${post.postId}" class="dropdown-item postid" href="#${post.postId}" data-toggle="modal" data-target="#editPostModal">Edit</a>
+                                            <!-- <a class="dropdown-item" href="#${post.postId}">Delete</a> -->
+                                            <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete" class="dropdown-item">
                                         </c:if>
 
                                         <c:if test="${post.userId!=user.userId}">
@@ -116,7 +121,14 @@
 
                             <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
                         </h4>
-                        <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
+                        <c:if test="${post.updated==true}">
+                            <h6 class="card-subtitle text-muted mb-2">${post.updateDate}</h6>
+                        </c:if>
+
+                        <c:if test="${post.updated!=true}">
+                            <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
+                        </c:if>
+
                     <span class="card-text">${post.text}</span>
                         <hr/>
                     </c:forEach>
@@ -124,10 +136,9 @@
                     <div class="owner action">
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
-                        <input form="edit_delete_post" type="submit" name="delete-post" value="DELETE" class="btn btn-danger mr-2">
+
                         <!-- <button class="btn btn-danger mr-2"> DELETE</button> -->
-                        <button class="btn btn-info" data-toggle="modal" data-target="#editPostModal">EDIT</button>
-                        <input form="edit_delete_post" required="required" name = "update-delete-post-id" type="number" class="my-2 mr-2 my-lg-0" placeholder="Post ID"/>
+                        <input id="edit-post" value = "" form="edit_delete_post" required="required" name = "update-delete-post-id" type="hidden"/>
                     </div>
                 </div>
             </div>
@@ -179,6 +190,7 @@
         </div>
     </div>
 
+    <!-- EDIT POST MODAL -->
     <div class="modal fade" id="editPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -214,6 +226,25 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $("a").click(function(event){
+            if(event.target.id){
+                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                $('#edit-post').val(event.target.id);
+            }
+        });
+
+        $("input").click(function(event){
+            if(event.target.id){
+                console.log(typeof(event.target.id));
+                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                $('#edit-post').val(event.target.id.replace("delete",""));
+            }
+        });
+    });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
 </body>

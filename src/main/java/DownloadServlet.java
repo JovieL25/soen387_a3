@@ -30,8 +30,17 @@ public class DownloadServlet extends HttpServlet {
         User user = (User)request.getSession().getAttribute("user");
         if(user!=null){
             String numPosts = request.getParameter("numPosts");
-            displayPosts(request, Manager.getAllPost(), Integer.parseInt(numPosts));
-            request.getRequestDispatcher("message-board.jsp").forward(request, response);
+            if(numPosts==null) {
+                displayPosts(request, Manager.getAllPost(), 10);
+
+                request.getRequestDispatcher("message-board.jsp").forward(request, response);
+            }
+            else{
+                displayPosts(request, Manager.getAllPost(), Integer.parseInt(numPosts));
+                request.getRequestDispatcher("message-board.jsp").forward(request, response);
+            }
+
+
         }
     }
 
