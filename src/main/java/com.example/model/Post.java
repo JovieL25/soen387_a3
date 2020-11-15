@@ -40,7 +40,7 @@ public class Post {
 
     public String getText(){return this.text;}
 
-    public Boolean getUpdate(){return this.updated;}
+    public Boolean getUpdated(){return this.updated;}
 
     public void setPostId(Integer postId){this.postId = postId;}
 
