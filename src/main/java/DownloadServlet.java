@@ -201,8 +201,6 @@ public class DownloadServlet extends HttpServlet {
         String hashTag      = request.getParameter("search-post-hash-tag");
         String numString    = request.getParameter("search-post-num-string");
 
-        int userId = Integer.parseInt(userIdString);
-
         ArrayList<Post> posts = Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString);
         request.setAttribute("posts", posts);
 

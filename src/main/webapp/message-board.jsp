@@ -81,7 +81,7 @@
             </div>
             <div class="my-2 mr-2 my-lg-0">|</div>
             <form class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
-                <input type="text" maxlength="4" size="4" class="form-control format mr-2" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID">
+                <input type="text" maxlength="4" size="4" class="form-control format mr-2" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID" required>
                 <input class="btn btn-primary" type="submit" name="download-file" value="Download Attachment">
             </form>
         </div>
