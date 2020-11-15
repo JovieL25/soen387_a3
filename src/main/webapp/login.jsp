@@ -25,6 +25,7 @@
       </script>
     </c:if>
 
+    <h1>Message Board</h1>
     <h1 class="h3 font-weight-normal">Please login</h1>
     <br>
 

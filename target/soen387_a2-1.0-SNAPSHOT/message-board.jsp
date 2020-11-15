@@ -30,7 +30,7 @@
     <!-- NAV BAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand">SOEN387 A2</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse my-2 mr-2 my-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link">${user.name}</a>
@@ -62,34 +62,30 @@
                 <form id="searchform" action="DownloadServlet" method="POST" class="form-login"></form>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
+                <input form="searchform"  maxlength="5" size="5" name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
+                <input form="searchform" maxlength="5" size="5" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
+                <input form="searchform" maxlength="5" size="5" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
+                <input form="searchform" maxlength="5" size="5"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  name = "search-post-num-string" type="text" class="form-control form-control-sm" placeholder="#num_string"/>
+                <input form="searchform" maxlength="5" size="5"  name = "search-post-num-string" type="text" class="form-control form-control-sm" placeholder="#RESULT"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  type="submit" name="search-post" value="Search" class="btn btn-primary">
+                <input form="searchform" maxlength="5" size="5"  type="submit" name="search-post" value="Search" class="btn btn-primary">
             </div>
-            <form action="DownloadServlet" method="POST" class="get-post-form">
-                <label for="download-file-post-id">Post ID</label>
-                <input type="text" class="form-control format" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID">
-                <br>
+            <div class="my-2 mr-2 my-lg-0">|</div>
+            <form class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
+                <input type="text" maxlength="4" size="4" class="form-control format mr-2" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID">
                 <input class="btn btn-primary" type="submit" name="download-file" value="Download Attachment">
             </form>
         </div>
-
-
     </nav>
-
 
     <!-- END OF NAV BAR -->
 
@@ -101,16 +97,18 @@
                 <div class="card-body">
 
                     <c:forEach var="post" items="${posts}">
-                        <h4 class="card-title">
-                            <span><strong>${post.title}</strong></span>
-                            <span class="badge badge-secondary">Post ID: ${post.postId}</span>
-                            <c:if test="${post.updated==true}">
-                                <span class="badge badge-secondary">Edited</span>
-                            </c:if>
-                            <div>
-                                <li class="nav-item active dropdown">
-                                    <a class="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    </a>
+                        <div class="card-title d-flex">
+                            <h3 class="p-2"><strong>${post.title}</strong>
+                                <span class="badge badge-secondary">Post ID: ${post.postId}</span>
+                                <c:if test="${post.updated==true}">
+                                    <span class="badge badge-secondary">Edited</span>
+                                </c:if>
+                            </h3>
+
+
+                            <div class="ml-auto p-2">
+<%--                                <span class="nav-item active dropdown">--%>
+                                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <c:if test="${post.userId==user.userId}">
@@ -124,17 +122,17 @@
                                         </c:if>
 
                                     </div>
-                                </li>
+<%--                                </span>--%>
                             </div>
 
                             <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
-                        </h4>
+                        </div>
                         <c:if test="${post.updated==true}">
-                            <h6 class="card-subtitle text-muted mb-2">${post.updateDate}</h6>
+                            <h5 class="card-subtitle text-muted mb-2">${post.updateDate}</h5>
                         </c:if>
 
                         <c:if test="${post.updated!=true}">
-                            <h6 class="card-subtitle text-muted mb-2">${post.postDate}</h6>
+                            <h5 class="card-subtitle text-muted mb-2">${post.postDate}</h5>
                         </c:if>
 
                     <span class="card-text">${post.text}</span>
