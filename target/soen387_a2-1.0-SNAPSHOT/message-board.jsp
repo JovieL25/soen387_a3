@@ -2,6 +2,10 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    String errorMessage = (String)request.getAttribute("error-message");
+%>
+
 
 <html>
 <head>
@@ -17,6 +21,10 @@
 
 
 <body>
+  <script type="text/javascript">
+    <%= errorMessage != null ? "alert(\"" + errorMessage + "\");" : "" %>
+  </script>
+
 <div class="app">
 
     <!-- NAV BAR -->

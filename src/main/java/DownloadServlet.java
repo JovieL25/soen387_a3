@@ -228,6 +228,8 @@ public class DownloadServlet extends HttpServlet {
             outputStream.close();
         }
         else {
+            request.setAttribute("error-message", "No file attached in this post.");
+
             displayPosts(request, Manager.getAllPost(), 10);
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
