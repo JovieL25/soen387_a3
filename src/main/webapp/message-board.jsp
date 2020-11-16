@@ -65,10 +65,10 @@
                 <input form="searchform"  size="5" name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" size="7" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
+                <input form="searchform" size="5" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" size="7" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
+                <input form="searchform" size="5" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
                 <input form="searchform" size="5"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
