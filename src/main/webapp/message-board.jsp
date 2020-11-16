@@ -79,11 +79,7 @@
             <div class="my-2 mr-2 my-lg-0">
                 <input form="searchform" maxlength="5" size="5"  type="submit" name="search-post" value="Search" class="btn btn-primary">
             </div>
-            <div class="my-2 mr-2 my-lg-0">|</div>
-            <form class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
-                <input type="text" maxlength="4" size="4" class="form-control format mr-2" id="download-file-post-id" name="download-file-post-id" placeholder="Post ID" required>
-                <input class="btn btn-primary" type="submit" name="download-file" value="Download Attachment">
-            </form>
+
         </div>
     </nav>
 
@@ -120,7 +116,7 @@
                                         <c:if test="${post.userId!=user.userId}">
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
-
+                                        <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
                                     </div>
 <%--                                </span>--%>
                             </div>
@@ -140,11 +136,12 @@
                     </c:forEach>
 
                     <div class="owner action">
+                        <form id="download_attachment" class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
+                        </form>
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
-
-                        <!-- <button class="btn btn-danger mr-2"> DELETE</button> -->
                         <input id="edit-post" value = "" form="edit_delete_post" required="required" name = "update-delete-post-id" type="hidden"/>
+                        <input type="hidden" value= "" maxlength="4" size="4" id="download-file-post-id" name="download-file-post-id">
                     </div>
                 </div>
             </div>
@@ -243,9 +240,15 @@
 
         $("input").click(function(event){
             if(event.target.id){
-                console.log(typeof(event.target.id));
                 //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
                 $('#edit-post').val(event.target.id.replace("delete",""));
+            }
+        });
+
+        $("input").click(function(event){
+            if(event.target.id){
+                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                $('#download-file-post-id').val(event.target.id.replace("download",""));
             }
         });
     });
