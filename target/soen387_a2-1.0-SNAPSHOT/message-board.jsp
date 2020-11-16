@@ -124,12 +124,11 @@
 
 
                         <c:if test="${post.updated==true}">
-                            <h5 class="card-subtitle text-muted mb-2">${post.updateDate}</h5>
+                            <h5 class="card-subtitle text-muted mb-2">Updated at ${post.updateDate}</h5>
                         </c:if>
 
-                        <c:if test="${post.updated!=true}">
-                            <h5 class="card-subtitle text-muted mb-2">${post.postDate}</h5>
-                        </c:if>
+
+                        <h5 class="card-subtitle text-muted mb-2">Post from ${post.postDate}</h5>
 
                         <h5 class="card-subtitle text-muted mb-2">By User ${post.userId}</h5>
 
