@@ -115,7 +115,7 @@ public class DownloadServlet extends HttpServlet {
     private void createPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String title = request.getParameter("create-post-title");
         String text  = request.getParameter("create-post-text");
-
+        //text=text.replaceAll("\n","<br/>").replaceAll("\r","");
         User user = (User)request.getSession().getAttribute("user");
 
         int userId = Integer.parseInt(user.getUserId());
@@ -235,6 +235,9 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts) {
+        for(Post i:posts){
+            i.setText(i.getText().replaceAll("\n","<br/>").replaceAll("\r",""));
+        }
         if(posts.size() > numPosts)
             request.setAttribute("posts", posts.subList(0, numPosts));
         else

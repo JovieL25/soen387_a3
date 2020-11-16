@@ -229,12 +229,13 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script>
       $(document).ready(function(){
           $("a").click(function(event){
+              //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
               if(event.target.id){
-                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  //
                   <c:set var = "edit_id" scope = "session" value = "${event.target.id}"/>
                   <c:forEach var="post" items="${posts}">
                   if("${post.postId}"==event.target.id) {
@@ -263,7 +264,6 @@
   </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-
 </body>
 
 
