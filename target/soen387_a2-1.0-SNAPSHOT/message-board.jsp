@@ -62,22 +62,22 @@
                 <form id="searchform" action="DownloadServlet" method="POST" class="form-login"></form>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform"  maxlength="5" size="5" name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
+                <input form="searchform"  size="5" name = "search-post-user-id" type="text" class="form-control form-control-sm" placeholder="User ID"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" maxlength="5" size="5" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
+                <input form="searchform" size="5" name = "search-post-date-from" type="text" class="form-control form-control-sm" placeholder="Date from"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" maxlength="5" size="5" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
+                <input form="searchform" size="5" name = "search-post-date-to" type="text" class="form-control form-control-sm" placeholder="Date to"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" maxlength="5" size="5"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
+                <input form="searchform" size="5"  name = "search-post-hash-tag" type="text" class="form-control form-control-sm" placeholder="Hash Tag"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" maxlength="5" size="5"  name = "search-post-num-string" type="text" class="form-control form-control-sm" placeholder="#RESULT"/>
+                <input form="searchform" size="5"  name = "search-post-num-string" type="text" class="form-control form-control-sm" placeholder="#RESULT"/>
             </div>
             <div class="my-2 mr-2 my-lg-0">
-                <input form="searchform" maxlength="5" size="5"  type="submit" name="search-post" value="Search" class="btn btn-primary">
+                <input form="searchform" size="5"  type="submit" name="search-post" value="Search" class="btn btn-primary">
             </div>
 
         </div>
@@ -91,7 +91,6 @@
         <div class="post">
             <div class="card">
                 <div class="card-body">
-
                     <c:forEach var="post" items="${posts}">
                         <div class="card-title d-flex">
                             <h3 class="p-2"><strong>${post.title}</strong>
@@ -100,7 +99,6 @@
                                     <span class="badge badge-secondary">Edited</span>
                                 </c:if>
                             </h3>
-
 
                             <div class="ml-auto p-2">
 <%--                                <span class="nav-item active dropdown">--%>
@@ -123,6 +121,8 @@
 
                             <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
                         </div>
+
+
                         <c:if test="${post.updated==true}">
                             <h5 class="card-subtitle text-muted mb-2">${post.updateDate}</h5>
                         </c:if>
@@ -130,6 +130,8 @@
                         <c:if test="${post.updated!=true}">
                             <h5 class="card-subtitle text-muted mb-2">${post.postDate}</h5>
                         </c:if>
+
+                        <h5 class="card-subtitle text-muted mb-2">By User ${post.userId}</h5>
 
                     <span class="card-text">${post.text}</span>
                         <hr/>
