@@ -141,7 +141,7 @@
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
                         <input id="edit-post" value = "" form="edit_delete_post" required="required" name = "update-delete-post-id" type="hidden"/>
-                        <input type="hidden" value= "" maxlength="4" size="4" id="download-file-post-id" name="download-file-post-id">
+                        <input form="download_attachment" type="hidden" value= "" maxlength="4" size="4" id="download-file-post-id" name="download-file-post-id">
                     </div>
                 </div>
             </div>

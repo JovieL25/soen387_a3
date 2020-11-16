@@ -209,7 +209,7 @@ public class DownloadServlet extends HttpServlet {
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String postIdString = request.getParameter("download-file-post-id");
-
+        System.out.println(postIdString);
         int postId = Integer.parseInt(postIdString);
 
         File file = Manager.selectFile(postId);
