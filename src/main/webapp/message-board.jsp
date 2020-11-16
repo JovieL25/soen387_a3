@@ -211,11 +211,11 @@
                     </div>
 
                     <div class="TITLE mb-2">
-                        <input name="update-post-title" form="edit_delete_post" class="form-control" placeHolder="Title"/>
+                        <input id="edit_post_title" name="update-post-title" form="edit_delete_post" class="form-control" placeHolder="Title"/>
                     </div>
 
                     <div class="CONTENT">
-                        <textarea name="update-post-text" form="edit_delete_post" class="form-control" rows="3" placeHolder="Text"></textarea>
+                        <textarea id="edit_post_text" name="update-post-text" form="edit_delete_post" class="form-control" rows="3" placeHolder="Text"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -230,30 +230,37 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script>
-    $(document).ready(function(){
-        $("a").click(function(event){
-            if(event.target.id){
-                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
-                $('#edit-post').val(event.target.id);
-            }
-        });
+  <script>
+      $(document).ready(function(){
+          $("a").click(function(event){
+              if(event.target.id){
+                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  <c:set var = "edit_id" scope = "session" value = "${event.target.id}"/>
+                  <c:forEach var="post" items="${posts}">
+                  if("${post.postId}"==event.target.id) {
+                      document.getElementById("edit_post_title").value="${post.title}";
+                      document.getElementById("edit_post_text").value="${post.text}";
+                  }
+                  </c:forEach>
+                  $('#edit-post').val(event.target.id);
+              }
+          });
 
-        $("input").click(function(event){
-            if(event.target.id){
-                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
-                $('#edit-post').val(event.target.id.replace("delete",""));
-            }
-        });
+          $("input").click(function(event){
+              if(event.target.id){
+                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  $('#edit-post').val(event.target.id.replace("delete",""));
+              }
+          });
 
-        $("input").click(function(event){
-            if(event.target.id){
-                //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
-                $('#download-file-post-id').val(event.target.id.replace("download",""));
-            }
-        });
-    });
-</script>
+          $("input").click(function(event){
+              if(event.target.id){
+                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  $('#download-file-post-id').val(event.target.id.replace("download",""));
+              }
+          });
+      });
+  </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
