@@ -117,10 +117,13 @@ public class DownloadServlet extends HttpServlet {
         String text  = request.getParameter("create-post-text");
         //text=text.replaceAll("\n","<br/>").replaceAll("\r","");
         User user = (User)request.getSession().getAttribute("user");
+        String group = request.getParameter("create-post-group");
+
 
         int userId = Integer.parseInt(user.getUserId());
 
-        Post post = new Post(userId, title, text);
+        //add group to post class
+        Post post = new Post(userId, title, text,group);
 
         Manager.createPost(post);
 

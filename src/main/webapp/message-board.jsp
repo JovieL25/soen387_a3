@@ -173,6 +173,10 @@
                 </div>
                 <div class="modal-body ">
 
+                    <div class="TITLE mb-2">
+                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
+                    </div>
+
                     <div class="FILE mb-2">
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
                     </div>

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>soen387_a2</artifactId>
+    <artifactId>soen387_a3</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>soen387_a2</name>
+    <name>soen387_a3</name>
     <packaging>war</packaging>
 
     <properties>
