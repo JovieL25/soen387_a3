@@ -1,4 +1,4 @@
-# soen387_a2
+# soen387_a3
 
 set up your mysql db as showned in lab4 and change the db name and cridentials that match yours in DBConnection java file.
 
