@@ -37,9 +37,4 @@ public interface PostDAO {
     boolean deleteFile(Integer postId);
 
 
-
-
-
-
-
 }

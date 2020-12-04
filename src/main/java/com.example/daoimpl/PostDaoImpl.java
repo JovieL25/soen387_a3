@@ -59,6 +59,7 @@ public class PostDaoImpl implements PostDAO {
         String text = null;
         Date postDate = null;
         Date modifiedDate = null;
+        String groups=null;
 
         try {
             Connection connection = DBConnection.getConnection();
@@ -77,7 +78,7 @@ public class PostDaoImpl implements PostDAO {
                 text         = resultSet.getString("text");
                 postDate     = resultSet.getDate("post_date");
                 modifiedDate = resultSet.getDate("update_date");
-
+                groups = resultSet.getString("groups");
                 connection.close();
             }
             else {
@@ -90,7 +91,7 @@ public class PostDaoImpl implements PostDAO {
             exception.printStackTrace();
         }
 
-        return new Post(postId, userId, title, postDate, modifiedDate, text);
+        return new Post(postId, userId, title, postDate, modifiedDate, text,groups);
     }
 
     @Override
@@ -166,7 +167,7 @@ public class PostDaoImpl implements PostDAO {
         Connection connection = DBConnection.getConnection();
 
         try{
-            String query = "INSERT INTO posts (user_id,title,post_date,update_date,text,updated) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO posts (user_id,title,post_date,update_date,text,updated,groups) VALUES (?, ?, ?, ?, ?, ?,?)";
             // Passing Statement.RETURN_GENERATED_KEYS to make getGeneratedKeys() work
             PreparedStatement ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
@@ -178,7 +179,7 @@ public class PostDaoImpl implements PostDAO {
             ps.setDate(4, null);
             ps.setString(5, post.getText());
             ps.setBoolean(6,false);
-
+            ps.setString(7,post.getGroups());
             int i = ps.executeUpdate();
 
             if(i == 1) {
@@ -216,7 +217,7 @@ public class PostDaoImpl implements PostDAO {
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET user_id=?, title=?,post_date=?,update_date=?,text=?,updated=? WHERE post_id=?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET user_id=?, title=?,post_date=?,update_date=?,text=?,updated=?,groups=? WHERE post_id=?");
 
             ps.setInt(1,post.getUserId());
             ps.setString(2, post.getTitle());
@@ -224,7 +225,8 @@ public class PostDaoImpl implements PostDAO {
             ps.setDate(4, new Date(System.currentTimeMillis()));
             ps.setString(5, post.getText());
             ps.setBoolean(6,true);
-            ps.setInt(7,post.getPostId());
+            ps.setString(7,post.getGroups());
+            ps.setInt(8,post.getPostId());
 
             int i = ps.executeUpdate();
 

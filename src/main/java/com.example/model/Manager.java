@@ -154,6 +154,7 @@ public class Manager {
                 Node nameNode     = userElement.getElementsByTagName("name").item(0);
                 Node emailNode    = userElement.getElementsByTagName("email").item(0);
                 Node passwordNode = userElement.getElementsByTagName("password").item(0);
+                // Node groupsNode = userElement.getElementsByTagName("groups").item(0);
 
                 String id           = idNode.getTextContent();
                 String name         = nameNode.getTextContent();

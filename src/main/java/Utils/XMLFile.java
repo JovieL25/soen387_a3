@@ -10,11 +10,8 @@ public class XMLFile {
         String passwordToHash_1 = "12345";
 
         String generatedPassword_1 = hashPassword(passwordToHash_1);
-        String generatedPassword_2 = hashPassword(passwordToHash_1);
-        String generatedPassword_3 = hashPassword(passwordToHash_1);
-        String generatedPassword_4 = hashPassword(passwordToHash_1);
 
-
+        String[] groups={"admins","concordia","encs","comp","soen"};
         String xmlContent = "<?xml version=\"1.0\"?>\n" +
                 "<users>\n" +
                 "\t<user id = \"1\">\n" +
@@ -26,19 +23,19 @@ public class XMLFile {
                 "\t<user id = \"2\">\n" +
                 "\t\t<name>Tianming Chen</name>\n" +
                 "\t\t<email>tianmingchen@gmail.com</email>\n" +
-                "\t\t<password>"+generatedPassword_2+"</password>\n" +
+                "\t\t<password>"+generatedPassword_1+"</password>\n" +
                 "\t</user>\n" +
 
                 "\t<user id = \"3\">\n" +
                 "\t\t<name>Jingyi Lin</name>\n" +
                 "\t\t<email>jingyilin@gmail.com</email>\n" +
-                "\t\t<password>"+generatedPassword_3+"</password>\n" +
+                "\t\t<password>"+generatedPassword_1+"</password>\n" +
                 "\t</user>\n" +
 
                 "\t<user id = \"4\">\n" +
                 "\t\t<name>Huanzhang Zhu</name>\n" +
                 "\t\t<email>huanzhangzhu@gmail.com</email>\n" +
-                "\t\t<password>"+generatedPassword_4+"</password>\n" +
+                "\t\t<password>"+generatedPassword_1+"</password>\n" +
                 "\t</user>\n" +
                 "</users>";
 
