@@ -90,6 +90,14 @@ public class DownloadServlet extends HttpServlet {
 
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
+        File groupsFile = new File(getServletContext().getRealPath("/") + "groups.xml");
+
+        File membershipsFile = new File(getServletContext().getRealPath("/") + "memberships.xml");
+
+        Manager.loadGroups(groupsFile);
+
+        Manager.loadMemberships(membershipsFile);
+
         User user = Manager.authenticate(email, password, usersFile);
         if (user != null) {
             request.getSession().setAttribute("user", user);

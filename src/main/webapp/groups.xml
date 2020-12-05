@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<groups>
+  <group>
+    <name>admins</name>
+    <parent></parent>
+  </group>
+  <group>
+    <name>concordia</name>
+    <parent></parent>
+  </group>
+  <group>
+    <name>encs</name>
+    <parent>concordia</parent>
+  </group>
+  <group>
+    <name>comp</name>
+    <parent>encs</parent>
+  </group>
+  <group>
+    <name>soen</name>
+    <parent>encs</parent>
+  </group>
+</groups>
