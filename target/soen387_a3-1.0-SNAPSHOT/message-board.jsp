@@ -161,6 +161,8 @@
 
     <form id="newpost" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
     </form>
+
+
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
@@ -173,12 +175,13 @@
                 </div>
                 <div class="modal-body ">
 
-                    <div class="TITLE mb-2">
-                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
-                    </div>
 
                     <div class="FILE mb-2">
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
+                    </div>
+
+                    <div class="GROUP mb-2">
+                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
                     </div>
 
                     <div class="TITLE mb-2">

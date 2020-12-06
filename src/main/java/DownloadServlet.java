@@ -133,7 +133,7 @@ public class DownloadServlet extends HttpServlet {
         //add group to post class
         Post post = new Post(userId, title, text, group);
 
-        Manager.createPost(post);
+        System.out.println(Manager.createPost(post));
 
         int postId = post.getPostId();
 
