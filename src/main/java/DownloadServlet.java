@@ -131,7 +131,7 @@ public class DownloadServlet extends HttpServlet {
         int userId = Integer.parseInt(user.getUserId());
 
         //add group to post class
-        Post post = new Post(userId, title, text,group);
+        Post post = new Post(userId, title, text, group);
 
         Manager.createPost(post);
 

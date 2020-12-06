@@ -53,4 +53,8 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public HashSet<String> getGroupNames() {
+        return groupNames;
+    }
 }
