@@ -6,13 +6,25 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
-<c:if test="${not empty signupError}">
+<c:if test="${not empty searcherror}">
     <script>
         window.addEventListener("load",function() {
-            alert("Sign up feature not available");
+            alert("Search form Date format is invalid");
         });
     </script>
 </c:if>
+
+<c:set var="isadmin" value="false" />
+<c:forEach var="item" items="${user.groupNames}">
+    <c:if test="${item eq 'admins'}">
+        <c:set var="isadmin" value="true" />
+    </c:if>
+</c:forEach>
+
+<script>
+    console.log("${user.groupNames}");
+    console.log("${isadmin}");
+</script>
 
 <html>
 <head>
@@ -112,14 +124,14 @@
                                     <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <c:if test="${post.userId==user.userId}">
+                                        <c:if test="${post.userId==user.userId or isadmin }">
                                             <a id= "${post.postId}" class="dropdown-item postid" href="#${post.postId}" data-toggle="modal" data-target="#editPostModal">Edit</a>
                                             <!-- <a class="dropdown-item" href="#${post.postId}">Delete</a> -->
                                             <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete" class="dropdown-item">
                                             <input form = "delete_attachment" id="delete_attachment_${post.postId}" class="dropdown-item" type="submit" name="delete-attachment" value="Delete Attachment">
                                         </c:if>
 
-                                        <c:if test="${post.userId!=user.userId}">
+                                        <c:if test="${post.userId!=user.userId and not isadmin}">
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
                                         <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
