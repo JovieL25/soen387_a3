@@ -6,6 +6,13 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
+<c:if test="${not empty signupError}">
+    <script>
+        window.addEventListener("load",function() {
+            alert("Sign up feature not available");
+        });
+    </script>
+</c:if>
 
 <html>
 <head>
@@ -175,6 +182,12 @@
                 </div>
                 <div class="modal-body ">
 
+<<<<<<< HEAD:target/soen387_a3-1.0-SNAPSHOT/message-board.jsp
+=======
+                    <div class="TITLE mb-2">
+                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
+                    </div>
+>>>>>>> main:target/soen387_a2-1.0-SNAPSHOT/message-board.jsp
 
                     <div class="FILE mb-2">
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>

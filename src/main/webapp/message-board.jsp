@@ -6,6 +6,13 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
+<c:if test="${not empty signupError}">
+    <script>
+        window.addEventListener("load",function() {
+            alert("Sign up feature not available");
+        });
+    </script>
+</c:if>
 
 <html>
 <head>
@@ -180,9 +187,10 @@
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
                     </div>
 
+                    <!--
                     <div class="GROUP mb-2">
                         <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
-                    </div>
+                    </div> -->
 
                     <div class="TITLE mb-2">
                         <input name="create-post-title" form="newpost" class="form-control" placeHolder="Title"/>
