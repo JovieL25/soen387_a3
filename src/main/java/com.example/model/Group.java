@@ -25,11 +25,24 @@ public class Group {
         this.parent = parent;
     }
 
-    public ArrayList<String> getGroupNames() {
+    public boolean hasAncestor(Group ancestor) {
+        for (Group temp = parent; temp != null; temp = temp.parent) {
+            if (temp.name.equals(ancestor.name))
+                return true;
+        }
+
+        return false;
+    }
+
+    public ArrayList<String> getGroupNames(ArrayList<Group> groups) {
         ArrayList<String> groupNames = new ArrayList<>();
 
-        for (Group temp = this; temp != null; temp = temp.parent)
-            groupNames.add(temp.name);
+        groupNames.add(this.name);
+
+        for (Group group: groups) {
+            if (group.hasAncestor(this))
+                groupNames.add(group.name);
+        }
 
         return groupNames;
     }

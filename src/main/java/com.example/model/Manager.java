@@ -206,7 +206,7 @@ public class Manager {
 
                     for (Group group: groups) {
                         if (group.getName().equals(groupName))
-                            groupNames.addAll(group.getGroupNames());
+                            groupNames.addAll(group.getGroupNames(groups));
                     }
                 }
 
