@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<memberships>
+  <membership>
+    <user-name>Kaixin Dai</user-name>
+    <group-name>admins</group-name>
+    <group-name>concordia</group-name>
+  </membership>
+  <membership>
+    <user-name>Tianming Chen</user-name>
+    <group-name>encs</group-name>
+  </membership>
+  <membership>
+    <user-name>Jingyi Lin</user-name>
+    <group-name>soen</group-name>
+  </membership>
+</memberships>

@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="soen387_a2" />
+        <module name="soen387_a3" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="soen387_a2" target="1.8" />
+      <module name="soen387_a3" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

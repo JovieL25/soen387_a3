@@ -9,11 +9,11 @@ public class Post {
     private Date updateDate;
     private String text;
     private Boolean updated;
-    private String groups;
+    private String group;
 
     public Post(){}
 
-    public Post(Integer postId, Integer userId, String title, Date postDate, Date updateDate, String text, String groups){
+    public Post(Integer postId, Integer userId, String title, Date postDate, Date updateDate, String text, String group){
         this.postId = postId;
         this.userId = userId;
         this.title = title;
@@ -21,14 +21,14 @@ public class Post {
         this.updateDate = updateDate;
         this.text = text;
         this.updated = false;
-        this.groups=new String(groups);
+        this.group = group;
     }
 
-    public Post(int userId, String title, String text,String groups) {
+    public Post(int userId, String title, String text, String group) {
         this.userId = userId;
         this.title = title;
         this.text = text;
-        this.groups=groups;
+        this.group = group;
     }
 
     public Integer getPostId(){return this.postId;}
@@ -61,9 +61,13 @@ public class Post {
 
     public int compareTo(Post otherPost){return this.postDate.compareTo(otherPost.postDate);}
 
-    public void setGroups(String groups){this.groups=new String(groups);}
+    public void setGroup(String group) {
+        this.group = group;
+    }
 
-    public String getGroups(){return new String(this.groups);}
+    public String getGroup() {
+        return group;
+    }
 }
 
 

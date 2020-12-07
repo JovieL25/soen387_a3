@@ -12,16 +12,18 @@ import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 //This is the business class
 
 public class Manager {
+    private static ArrayList<Group> groups;
+
+    private static HashMap<String, HashSet<String>> memberships;
 
     private static PostDaoImpl postImpl = new PostDaoImpl();
 
@@ -135,6 +137,96 @@ public class Manager {
         return postImpl.getUser(email,password);
     }
 
+    public static void loadGroups(File groupsFile) {
+        groups = new ArrayList<>();
+
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+            Document document = documentBuilder.parse(groupsFile);
+            document.getDocumentElement().normalize();
+
+            NodeList groupsNodeList = document.getElementsByTagName("group");
+            for (int i = 0; i < groupsNodeList.getLength(); i++) {
+                Node groupNode = groupsNodeList.item(i);
+
+                Element groupElement = (Element)groupNode;
+
+                Node nameNode   = groupElement.getElementsByTagName("name").item(0);
+                Node parentNode = groupElement.getElementsByTagName("parent").item(0);
+
+                String name   = nameNode.getTextContent();
+                String parent = parentNode.getTextContent();
+
+                Group group = new Group(name);
+
+                for (Group group_: groups) {
+                    if (group_.getName().equals(parent))
+                        group.setParent(group_);
+                }
+
+                groups.add(group);
+            }
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public static void loadMemberships(File membershipsFile) {
+        memberships = new HashMap<>();
+
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+            Document document = documentBuilder.parse(membershipsFile);
+            document.getDocumentElement().normalize();
+
+            NodeList membershipNodeList = document.getElementsByTagName("membership");
+            for (int i = 0; i < membershipNodeList.getLength(); i++) {
+                Node membershipNode = membershipNodeList.item(i);
+
+                Element membershipElement = (Element)membershipNode;
+
+                Node userNameNode = membershipElement.getElementsByTagName("user-name").item(0);
+
+                String userName = userNameNode.getTextContent();
+
+                HashSet<String> groupNames = new HashSet<>();
+
+                NodeList groupNamesNodeList = membershipElement.getElementsByTagName("group-name");
+                for (int j = 0; j < groupNamesNodeList.getLength(); j++) {
+                    Node groupNameNode = groupNamesNodeList.item(j);
+
+                    String groupName = groupNameNode.getTextContent();
+
+                    for (Group group: groups) {
+                        if (group.getName().equals(groupName))
+                            groupNames.addAll(group.getGroupNames(groups));
+                    }
+                }
+
+                memberships.put(userName, groupNames);
+            }
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        for (String userName: memberships.keySet()) {
+            System.out.print(userName + ": ");
+
+            for (String groupName: memberships.get(userName))
+                System.out.print(groupName + " ");
+
+            System.out.println();
+        }
+    }
+
     public static User authenticate(String emailTest, String passwordTest, File usersFile) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -154,16 +246,14 @@ public class Manager {
                 Node nameNode     = userElement.getElementsByTagName("name").item(0);
                 Node emailNode    = userElement.getElementsByTagName("email").item(0);
                 Node passwordNode = userElement.getElementsByTagName("password").item(0);
-                // Node groupsNode = userElement.getElementsByTagName("groups").item(0);
 
                 String id           = idNode.getTextContent();
                 String name         = nameNode.getTextContent();
                 String emailTrue    = emailNode.getTextContent();
                 String passwordTrue = passwordNode.getTextContent();
 
-                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest))) {
-                    return new User(id, name, emailTrue, passwordTrue);
-                }
+                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest)))
+                    return new User(id, name, emailTrue, passwordTrue, memberships.get(name));
             }
         }
         catch (Exception exception) {
@@ -232,5 +322,8 @@ public class Manager {
         return sortedArray;
     }
 
-
+    public static void main(String[] args)
+    {
+        System.out.println("!");
+    }
 }
