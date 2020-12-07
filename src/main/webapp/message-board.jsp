@@ -6,6 +6,13 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
+<c:if test="${not empty signupError}">
+    <script>
+        window.addEventListener("load",function() {
+            alert("Sign up feature not available");
+        });
+    </script>
+</c:if>
 
 <html>
 <head>
