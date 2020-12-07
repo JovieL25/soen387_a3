@@ -6,14 +6,6 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
-<c:if test="${not empty searcherror}">
-    <script>
-        window.addEventListener("load",function() {
-            alert("Search form Date format is invalid");
-        });
-    </script>
-</c:if>
-
 
 <html>
 <head>
@@ -140,6 +132,8 @@
 
                         <h5 class="card-subtitle text-muted mb-2">By User ${post.userId}</h5>
 
+                        <h5 class="card-subtitle text-muted mb-2">Group ${post.group}</h5>
+
                     <span class="card-text">${post.text}</span>
                         <hr/>
                     </c:forEach>
@@ -233,9 +227,11 @@
                     </div>
 
                     <div class="GROUP mb-2">
-                        <select form="edit_delete_post" id="group-edit" name="update-post-group">
+                        <select form="edit_delete_post" id="edit_post_group" name="update-post-group">
                             <c:forEach var="group" items="${user.groupNames}">
-                                <option value="${group}">${group}</option>
+                                <c:if test="${group != 'admins'}">
+                                    <option value="${group}">${group}</option>
+                                </c:if>
                             </c:forEach>
                             <option value="public">public</option>
                         </select>
@@ -273,6 +269,13 @@
                   if("${post.postId}"==event.target.id) {
                       document.getElementById("edit_post_title").value="${post.title}";
                       document.getElementById("edit_post_text").value="${post.text}";
+                      var mySelect = document.getElementById("edit_post_group");
+                      for(var i, j = 0; i = mySelect.options[j]; j++) {
+                          if(i.value == "${post.group}") {
+                              mySelect.selectedIndex = j;
+                              break;
+                          }
+                      }
                   }
                   </c:forEach>
                   $('#edit-post').val(event.target.id);
