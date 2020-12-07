@@ -68,6 +68,10 @@ public class DownloadServlet extends HttpServlet {
         if (deletePost != null)
             deletePost(request, response);
 
+        String deleteAttachment = request.getParameter("delete-attachment");
+        if (deletePost != null)
+            deleteAttachment(request, response);
+
         String searchPost = request.getParameter("search-post");
         if (searchPost != null)
             searchPost(request, response);
@@ -148,6 +152,7 @@ public class DownloadServlet extends HttpServlet {
         String postIdString = request.getParameter("update-delete-post-id");
         String title        = request.getParameter("update-post-title");
         String text         = request.getParameter("update-post-text");
+        String group = request.getParameter("update-post-group");
 
         int postId = Integer.parseInt(postIdString);
 
@@ -158,10 +163,11 @@ public class DownloadServlet extends HttpServlet {
         User currentUser = (User)request.getSession().getAttribute("user");
 
         int currentUserId = Integer.parseInt(currentUser.getUserId());
-        if (currentUserId == userId) {
+
+        if (currentUserId == userId || currentUser.isAdmin()) {
             post.setTitle(title);
             post.setText(text);
-
+            post.setGroup(group);
             Manager.updatePost(post);
 
             Part part = request.getPart("update-post-file");
@@ -191,7 +197,7 @@ public class DownloadServlet extends HttpServlet {
         User currentUser = (User)request.getSession().getAttribute("user");
 
         int currentUserId = Integer.parseInt(currentUser.getUserId());
-        if (currentUserId == userId) {
+        if (currentUserId == userId || currentUser.isAdmin()) {
             Manager.deletePost(postId);
 
             Manager.deleteFile(postId);
@@ -200,6 +206,10 @@ public class DownloadServlet extends HttpServlet {
         displayPosts(request, Manager.getAllPost(), 10, currentUser);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
+    }
+
+    private void deleteAttachment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
     }
 
     private void searchPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -225,7 +235,6 @@ public class DownloadServlet extends HttpServlet {
 
 
     }
-
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String postIdString = request.getParameter("download-file-post-id");

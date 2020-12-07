@@ -6,13 +6,14 @@
     String errorMessage = (String)request.getAttribute("error-message");
 %>
 
-<c:if test="${not empty signupError}">
+<c:if test="${not empty searcherror}">
     <script>
         window.addEventListener("load",function() {
-            alert("Sign up feature not available");
+            alert("Search form Date format is invalid");
         });
     </script>
 </c:if>
+
 
 <html>
 <head>
@@ -113,13 +114,14 @@
                                     <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <c:if test="${post.userId==user.userId}">
+                                        <c:if test="${post.userId==user.userId or user.admin }">
                                             <a id= "${post.postId}" class="dropdown-item postid" href="#${post.postId}" data-toggle="modal" data-target="#editPostModal">Edit</a>
                                             <!-- <a class="dropdown-item" href="#${post.postId}">Delete</a> -->
                                             <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete" class="dropdown-item">
+                                            <input form = "delete_attachment" id="delete_attachment_${post.postId}" class="dropdown-item" type="submit" name="delete-attachment" value="Delete Attachment">
                                         </c:if>
 
-                                        <c:if test="${post.userId!=user.userId}">
+                                        <c:if test="${post.userId!=user.userId and not user.admin}">
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
                                         <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
@@ -147,8 +149,11 @@
                         </form>
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
+                        <form id="delete_attachment" class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
+                        </form>
                         <input id="edit-post" value = "" form="edit_delete_post" required="required" name = "update-delete-post-id" type="hidden"/>
                         <input form="download_attachment" type="hidden" value= "" maxlength="4" size="4" id="download-file-post-id" name="download-file-post-id">
+                        <input form="delete_attachment" type="hidden" value= "" maxlength="4" size="4" id="delete-file-post-id" name="delete-file-post-id">
                     </div>
                 </div>
             </div>
@@ -168,7 +173,6 @@
     <form id="newpost" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
     </form>
 
-
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
@@ -187,10 +191,11 @@
 
 
                     <div class="GROUP mb-2">
-                        <select form="newpost" id="group" name="group">
+                        <select form="newpost" id="group" name="create-post-group">
                             <c:forEach var="group" items="${user.groupNames}">
                                 <option value="${group}">${group}</option>
                             </c:forEach>
+                            <option value="public">public</option>
                         </select>
                     </div>
 
@@ -227,6 +232,15 @@
                         <input name="update-post-file" form="edit_delete_post" type="file" class="form-control-file"/>
                     </div>
 
+                    <div class="GROUP mb-2">
+                        <select form="edit_delete_post" id="group-edit" name="update-post-group">
+                            <c:forEach var="group" items="${user.groupNames}">
+                                <option value="${group}">${group}</option>
+                            </c:forEach>
+                            <option value="public">public</option>
+                        </select>
+                    </div>
+
                     <div class="TITLE mb-2">
                         <input id="edit_post_title" name="update-post-title" form="edit_delete_post" class="form-control" placeHolder="Title"/>
                     </div>
@@ -235,6 +249,7 @@
                         <textarea id="edit_post_text" name="update-post-text" form="edit_delete_post" class="form-control" rows="3" placeHolder="Text"></textarea>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={handleClose} > Cancel </button>
                     <input form="edit_delete_post" type="submit" name="update-post" value="Post" class="btn btn-primary">
@@ -275,6 +290,13 @@
               if(event.target.id){
                   //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
                   $('#download-file-post-id').val(event.target.id.replace("download",""));
+              }
+          });
+
+          $("input").click(function(event){
+              if(event.target.id){
+                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  $('#delete-file-post-id').val(event.target.id.replace("delete_attachment_",""));
               }
           });
       });
