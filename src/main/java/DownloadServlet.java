@@ -5,8 +5,12 @@ import com.example.model.User;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.annotation.MultipartConfig;
@@ -204,12 +208,24 @@ public class DownloadServlet extends HttpServlet {
         String dateTo       = request.getParameter("search-post-date-to");
         String hashTag      = request.getParameter("search-post-hash-tag");
         String numString    = request.getParameter("search-post-num-string");
+        try{
+            ArrayList<Post> posts = Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString);
+            request.setAttribute("posts", posts);
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);}
+        catch (Exception e){
+            List<Post> posts=null;
+            if(Manager.getAllPost().size()>10)
+                posts = Manager.getAllPost().subList(0, 10);
+            else
+                posts = Manager.getAllPost();
+            request.setAttribute("posts", posts);
+            request.setAttribute("searcherror", 1);
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
+        }
 
-        ArrayList<Post> posts = Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString);
-        request.setAttribute("posts", posts);
 
-        request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
+
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String postIdString = request.getParameter("download-file-post-id");
