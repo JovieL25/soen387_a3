@@ -14,17 +14,6 @@
     </script>
 </c:if>
 
-<c:set var="isadmin" value="false" />
-<c:forEach var="item" items="${user.groupNames}">
-    <c:if test="${item eq 'admins'}">
-        <c:set var="isadmin" value="true" />
-    </c:if>
-</c:forEach>
-
-<script>
-    console.log("${user.groupNames}");
-    console.log("${isadmin}");
-</script>
 
 <html>
 <head>
@@ -109,6 +98,7 @@
         <!-- RENDER MULTIIPLE POST -->
         <div class="post">
             <div class="card">
+
                 <div class="card-body">
                     <c:forEach var="post" items="${posts}">
                         <div class="card-title d-flex">
@@ -124,24 +114,22 @@
                                     <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                                     <!-- @ACTION DROPDOWN FOR # OF POST IN DASHBOARD -->
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <c:if test="${post.userId==user.userId or isadmin }">
+                                        <c:if test="${post.userId==user.userId or user.admin }">
                                             <a id= "${post.postId}" class="dropdown-item postid" href="#${post.postId}" data-toggle="modal" data-target="#editPostModal">Edit</a>
                                             <!-- <a class="dropdown-item" href="#${post.postId}">Delete</a> -->
                                             <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete" class="dropdown-item">
                                             <input form = "delete_attachment" id="delete_attachment_${post.postId}" class="dropdown-item" type="submit" name="delete-attachment" value="Delete Attachment">
                                         </c:if>
 
-                                        <c:if test="${post.userId!=user.userId and not isadmin}">
+                                        <c:if test="${post.userId!=user.userId and not user.admin}">
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
                                         <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
                                     </div>
 <%--                                </span>--%>
                             </div>
-
                             <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
                         </div>
-
 
                         <c:if test="${post.updated==true}">
                             <h5 class="card-subtitle text-muted mb-2">Updated at ${post.updateDate}</h5>
@@ -185,7 +173,6 @@
     <form id="newpost" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
     </form>
 
-
     <!-- NEW POST MODAL -->
     <div class="modal fade" id="newPostModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
@@ -198,15 +185,19 @@
                 </div>
                 <div class="modal-body ">
 
-
                     <div class="FILE mb-2">
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
                     </div>
 
-                    <!--
+
                     <div class="GROUP mb-2">
-                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
-                    </div> -->
+                        <select form="newpost" id="group" name="create-post-group">
+                            <c:forEach var="group" items="${user.groupNames}">
+                                <option value="${group}">${group}</option>
+                            </c:forEach>
+                            <option value="public">public</option>
+                        </select>
+                    </div>
 
                     <div class="TITLE mb-2">
                         <input name="create-post-title" form="newpost" class="form-control" placeHolder="Title"/>
@@ -239,6 +230,15 @@
 
                     <div class="FILE mb-2">
                         <input name="update-post-file" form="edit_delete_post" type="file" class="form-control-file"/>
+                    </div>
+
+                    <div class="GROUP mb-2">
+                        <select form="edit_delete_post" id="group-edit" name="update-post-group">
+                            <c:forEach var="group" items="${user.groupNames}">
+                                <option value="${group}">${group}</option>
+                            </c:forEach>
+                            <option value="public">public</option>
+                        </select>
                     </div>
 
                     <div class="TITLE mb-2">

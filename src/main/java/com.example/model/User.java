@@ -9,6 +9,7 @@ public class User {
     private String email;
     private String password;
     private HashSet<String> groupNames;
+    private boolean admin;
 
     public User() {
 
@@ -20,6 +21,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.groupNames = groupNames;
+        this.admin = groupNames.contains("admins");
     }
 
     public String getUserId() {
@@ -57,4 +59,7 @@ public class User {
     public HashSet<String> getGroupNames() {
         return groupNames;
     }
+
+    public boolean isAdmin() { return admin; }
+
 }
