@@ -97,6 +97,7 @@
         <!-- RENDER MULTIIPLE POST -->
         <div class="post">
             <div class="card">
+
                 <div class="card-body">
                     <c:forEach var="post" items="${posts}">
                         <div class="card-title d-flex">
@@ -125,10 +126,8 @@
                                     </div>
 <%--                                </span>--%>
                             </div>
-
                             <!-- <span class="badge badge-secondary">User ID: ${post.userId}</span> -->
                         </div>
-
 
                         <c:if test="${post.updated==true}">
                             <h5 class="card-subtitle text-muted mb-2">Updated at ${post.updateDate}</h5>
@@ -182,15 +181,18 @@
                 </div>
                 <div class="modal-body ">
 
-
                     <div class="FILE mb-2">
                         <input name="create-post-file" form="newpost" type="file" class="form-control-file" id="exampleFormControlFile1"/>
                     </div>
 
-                    <!--
+
                     <div class="GROUP mb-2">
-                        <input name="create-post-group" form="newpost" class="form-control" placeHolder="Group"/>
-                    </div> -->
+                        <select form="newpost" id="group" name="group">
+                            <c:forEach var="group" items="${user.groupNames}">
+                                <option value="${group}">${group}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
 
                     <div class="TITLE mb-2">
                         <input name="create-post-title" form="newpost" class="form-control" placeHolder="Title"/>
