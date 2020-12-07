@@ -73,6 +73,10 @@ public class DownloadServlet extends HttpServlet {
         if (deletePost != null)
             deletePost(request, response);
 
+        String deleteAttachment = request.getParameter("delete-attachment");
+        if (deletePost != null)
+            deleteAttachment(request, response);
+
         String searchPost = request.getParameter("search-post");
         if (searchPost != null)
             searchPost(request, response);
@@ -207,6 +211,8 @@ public class DownloadServlet extends HttpServlet {
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
+
+    private void deleteAttachment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{}
 
     private void searchPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userIdString = request.getParameter("search-post-user-id");
