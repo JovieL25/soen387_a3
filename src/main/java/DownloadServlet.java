@@ -28,19 +28,14 @@ public class DownloadServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         User user = (User)request.getSession().getAttribute("user");
-        if(user!=null){
+        if (user != null) {
             String numPosts = request.getParameter("numPosts");
-            if(numPosts==null) {
-                displayPosts(request, Manager.getAllPost(), 10);
+            if (numPosts == null)
+                displayPosts(request, Manager.getAllPost(), 10, user);
+            else
+                displayPosts(request, Manager.getAllPost(), Integer.parseInt(numPosts), user);
 
-                request.getRequestDispatcher("message-board.jsp").forward(request, response);
-            }
-            else{
-                displayPosts(request, Manager.getAllPost(), Integer.parseInt(numPosts));
-                request.getRequestDispatcher("message-board.jsp").forward(request, response);
-            }
-
-
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
     }
 
@@ -101,12 +96,8 @@ public class DownloadServlet extends HttpServlet {
         User user = Manager.authenticate(email, password, usersFile);
         if (user != null) {
             request.getSession().setAttribute("user", user);
-            List<Post> posts=null;
-            if(Manager.getAllPost().size()>10)
-                posts = Manager.getAllPost().subList(0, 10);
-            else
-                posts = Manager.getAllPost();
-            request.setAttribute("posts", posts);
+
+            displayPosts(request, Manager.getAllPost(), 10, user);
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
@@ -124,16 +115,16 @@ public class DownloadServlet extends HttpServlet {
         String title = request.getParameter("create-post-title");
         String text  = request.getParameter("create-post-text");
         //text=text.replaceAll("\n","<br/>").replaceAll("\r","");
-        User user = (User)request.getSession().getAttribute("user");
         String group = request.getParameter("create-post-group");
 
+        User user = (User)request.getSession().getAttribute("user");
 
         int userId = Integer.parseInt(user.getUserId());
 
         //add group to post class
         Post post = new Post(userId, title, text, group);
 
-        System.out.println(Manager.createPost(post));
+        Manager.createPost(post);
 
         int postId = post.getPostId();
 
@@ -142,7 +133,9 @@ public class DownloadServlet extends HttpServlet {
         if (part.getSize() > 0)
             Manager.insertFile(part, postId);
 
-        displayPosts(request, Manager.getAllPost(), 10);
+        User currentUser = (User)request.getSession().getAttribute("user");
+
+        displayPosts(request, Manager.getAllPost(), 10, currentUser);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -177,7 +170,7 @@ public class DownloadServlet extends HttpServlet {
             }
         }
 
-        displayPosts(request, Manager.getAllPost(), 10);
+        displayPosts(request, Manager.getAllPost(), 10, currentUser);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -200,7 +193,7 @@ public class DownloadServlet extends HttpServlet {
             Manager.deleteFile(postId);
         }
 
-        displayPosts(request, Manager.getAllPost(), 10);
+        displayPosts(request, Manager.getAllPost(), 10, currentUser);
 
         request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
@@ -239,19 +232,28 @@ public class DownloadServlet extends HttpServlet {
         else {
             request.setAttribute("error-message", "No file attached in this post.");
 
-            displayPosts(request, Manager.getAllPost(), 10);
+            User currentUser = (User)request.getSession().getAttribute("user");
+
+            displayPosts(request, Manager.getAllPost(), 10, currentUser);
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
     }
 
-    private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts) {
-        for(Post i:posts){
+    private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts, User user) {
+        List<Post> posts_ = new ArrayList<>();
+        for (Post post: posts) {
+            if (post.getGroup() == null ||
+                    user.getGroupNames().contains(post.getGroup()))
+                posts_.add(post);
+        }
+
+        for (Post i: posts_) {
             i.setText(i.getText().replaceAll("\n","<br/>").replaceAll("\r",""));
         }
-        if(posts.size() > numPosts)
-            request.setAttribute("posts", posts.subList(0, numPosts));
+        if(posts_.size() > numPosts)
+            request.setAttribute("posts", posts_.subList(0, numPosts));
         else
-            request.setAttribute("posts", posts);
+            request.setAttribute("posts", posts_);
     }
 }

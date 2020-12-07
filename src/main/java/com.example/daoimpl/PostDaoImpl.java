@@ -643,6 +643,7 @@ public class PostDaoImpl implements PostDAO {
         post.setUpdateDate(rs.getDate("update_date"));
         post.setText(rs.getString("text"));
         post.setUpdated(rs.getBoolean("updated"));
+        post.setGroup(rs.getString("user_group"));
 
         return post;
     }
