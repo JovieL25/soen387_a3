@@ -69,7 +69,7 @@ public class DownloadServlet extends HttpServlet {
             deletePost(request, response);
 
         String deleteAttachment = request.getParameter("delete-attachment");
-        if (deletePost != null)
+        if (deleteAttachment != null)
             deleteAttachment(request, response);
 
         String searchPost = request.getParameter("search-post");
@@ -124,7 +124,7 @@ public class DownloadServlet extends HttpServlet {
         String text  = request.getParameter("create-post-text");
         //text=text.replaceAll("\n","<br/>").replaceAll("\r","");
         String group = request.getParameter("create-post-group");
-
+        System.out.println(group);
         User user = (User)request.getSession().getAttribute("user");
 
         int userId = Integer.parseInt(user.getUserId());
@@ -187,9 +187,7 @@ public class DownloadServlet extends HttpServlet {
 
     private void deletePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String postIdString = request.getParameter("update-delete-post-id");
-
         int postId = Integer.parseInt(postIdString);
-
         Post post = Manager.getPost(postId);
 
         int userId = post.getUserId();
@@ -199,7 +197,6 @@ public class DownloadServlet extends HttpServlet {
         int currentUserId = Integer.parseInt(currentUser.getUserId());
         if (currentUserId == userId || currentUser.isAdmin()) {
             Manager.deletePost(postId);
-
             Manager.deleteFile(postId);
         }
 
@@ -209,7 +206,21 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void deleteAttachment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        String postIdString = request.getParameter("delete-file-post-id");
+        int postId = Integer.parseInt(postIdString);
+        System.out.println(postId);
+        Post post = Manager.getPost(postId);
 
+        int userId = post.getUserId();
+        User currentUser = (User)request.getSession().getAttribute("user");
+
+        int currentUserId = Integer.parseInt(currentUser.getUserId());
+
+        if (currentUserId == userId || currentUser.isAdmin())
+            Manager.deleteFile(postId);
+
+        displayPosts(request, Manager.getAllPost(), 10, currentUser);
+        request.getRequestDispatcher("message-board.jsp").forward(request, response);
     }
 
     private void searchPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -218,10 +229,11 @@ public class DownloadServlet extends HttpServlet {
         String dateTo       = request.getParameter("search-post-date-to");
         String hashTag      = request.getParameter("search-post-hash-tag");
         String numString    = request.getParameter("search-post-num-string");
+        User currentUser = (User)request.getSession().getAttribute("user");
         try{
-            ArrayList<Post> posts = Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString);
-            request.setAttribute("posts", posts);
-            request.getRequestDispatcher("message-board.jsp").forward(request, response);}
+            displayPosts(request, Manager.getPost(userIdString, dateFrom, dateTo, hashTag, numString), 10, currentUser);
+            request.getRequestDispatcher("message-board.jsp").forward(request, response);
+        }
         catch (Exception e){
             List<Post> posts=null;
             if(Manager.getAllPost().size()>10)
@@ -229,7 +241,7 @@ public class DownloadServlet extends HttpServlet {
             else
                 posts = Manager.getAllPost();
             request.setAttribute("posts", posts);
-            request.setAttribute("searcherror", 1);
+            request.setAttribute("error-message", "Search form Date format is invalid");
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
 
@@ -268,7 +280,7 @@ public class DownloadServlet extends HttpServlet {
     private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts, User user) {
         List<Post> posts_ = new ArrayList<>();
         for (Post post: posts) {
-            if (post.getGroup() == null ||
+            if (post.getGroup().equals("public") ||
                     user.getGroupNames().contains(post.getGroup()))
                 posts_.add(post);
         }
