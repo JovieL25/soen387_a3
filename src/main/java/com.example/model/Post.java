@@ -68,6 +68,20 @@ public class Post {
     public String getGroup() {
         return group;
     }
+
+    public String toXmlString() {
+        return "<post>" + "\n" +
+               "  <post-id>" + postId + "</post-id>" + "\n" +
+               "  <user-id>" + userId + "</user-id>" + "\n" +
+               "  <group>" + group + "</group>" + "\n" +
+               "  <title>" + title + "</title>" + "\n" +
+               "  <post-date>" + postDate + "</post-date>" + "\n" +
+               "  <update-date>" + updateDate + "</update-date>" + "\n" +
+               "  <text>" + "\n" +
+               "  " + text + "\n" +
+               "  </text>" + "\n" +
+               "</post>";
+    }
 }
 
 

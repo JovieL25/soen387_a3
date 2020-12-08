@@ -41,6 +41,10 @@ public class DownloadServlet extends HttpServlet {
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
+
+        String download = request.getParameter("download-post");
+        if (download != null)
+            downloadPost(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -275,6 +279,20 @@ public class DownloadServlet extends HttpServlet {
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
+    }
+
+    public void downloadPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String postId = request.getParameter("download-post-post-id");
+
+        Post post = Manager.getPost(Integer.parseInt(postId));
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"post-" + postId + ".xml\"");
+        response.setContentType("text/xml");
+
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(post.toXmlString().getBytes());
+        outputStream.flush();
+        outputStream.close();
     }
 
     private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts, User user) {
