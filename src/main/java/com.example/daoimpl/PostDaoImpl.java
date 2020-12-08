@@ -681,4 +681,31 @@ public class PostDaoImpl implements PostDAO {
 
     }
 
+    public Post getLastPost() {
+        int postId = 0, userId = 0;
+        String title = null, text = null, groups=null;
+        Date postDate = null, modifiedDate = null;
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT * FROM posts ORDER BY post_id DESC LIMIT 1";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                postId       = resultSet.getInt("post_id");
+                userId       = resultSet.getInt("user_id");
+                title        = resultSet.getString("title");
+                text         = resultSet.getString("text");
+                postDate     = resultSet.getDate("post_date");
+                modifiedDate = resultSet.getDate("update_date");
+                groups = resultSet.getString("user_group");
+                connection.close();
+            } else {
+                connection.close();
+                return null;
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return new Post(postId, userId, title, postDate, modifiedDate, text,groups);
+    }
 }

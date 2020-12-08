@@ -82,6 +82,25 @@ public class Post {
                "  </text>" + "\n" +
                "</post>";
     }
+
+    public boolean equals(Object obj, String param) {
+        if (obj==null || this==null || this.getClass() != obj.getClass()) return false;
+        else {
+            Post p = (Post) obj;
+            return (this.getUserId()==p.getUserId()
+                    && this.getTitle().equals(p.getTitle())
+                    && (param.equals("no_postDate") || this.getPostDate() == p.getPostDate())
+                    && this.getText().equals(p.getText())
+                    && this.getGroup().equals(p.getGroup()));
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "[userId:"+userId+", title:"+title+", postDate:" + postDate
+                + ", updateDate:"+updateDate+", text:"+text+", updated:"+updated
+                + ", group:" + group;
+    }
 }
 
 

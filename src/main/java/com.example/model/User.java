@@ -62,4 +62,11 @@ public class User {
 
     public boolean isAdmin() { return admin; }
 
+    @Override
+    public String toString() {
+        return "[userId:"+userId+", name:"+name+", email:"+email
+                + ", password:"+password+", groupName:"+groupNames
+                +", admin:"+admin;
+    }
+
 }

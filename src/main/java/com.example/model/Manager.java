@@ -326,4 +326,8 @@ public class Manager {
     {
         System.out.println("!");
     }
+
+    public static Post getLastPost(){
+        return postImpl.getLastPost();
+    }
 }
