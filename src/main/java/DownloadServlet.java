@@ -42,9 +42,7 @@ public class DownloadServlet extends HttpServlet {
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
         }
 
-        String download = request.getParameter("download-post");
-        if (download != null)
-            downloadPost(request, response);
+        System.out.println("in do get");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,6 +81,12 @@ public class DownloadServlet extends HttpServlet {
         String downloadFile = request.getParameter("download-file");
         if (downloadFile != null)
             downloadFile(request, response);
+
+        String downloadPost = request.getParameter("download-post");
+        System.out.println("post: " + downloadPost);
+        System.out.println("file: " + downloadFile);
+        if (downloadPost != null)
+            downloadPost(request, response);
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -128,7 +132,6 @@ public class DownloadServlet extends HttpServlet {
         String text  = request.getParameter("create-post-text");
         //text=text.replaceAll("\n","<br/>").replaceAll("\r","");
         String group = request.getParameter("create-post-group");
-        System.out.println(group);
         User user = (User)request.getSession().getAttribute("user");
 
         int userId = Integer.parseInt(user.getUserId());
@@ -212,7 +215,7 @@ public class DownloadServlet extends HttpServlet {
     private void deleteAttachment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String postIdString = request.getParameter("delete-file-post-id");
         int postId = Integer.parseInt(postIdString);
-        System.out.println(postId);
+
         Post post = Manager.getPost(postId);
 
         int userId = post.getUserId();
@@ -254,7 +257,7 @@ public class DownloadServlet extends HttpServlet {
 
     private void downloadFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String postIdString = request.getParameter("download-file-post-id");
-        System.out.println(postIdString);
+
         int postId = Integer.parseInt(postIdString);
 
         File file = Manager.selectFile(postId);
@@ -298,7 +301,8 @@ public class DownloadServlet extends HttpServlet {
     private void displayPosts(HttpServletRequest request, List<Post> posts, int numPosts, User user) {
         List<Post> posts_ = new ArrayList<>();
         for (Post post: posts) {
-            if (post.getGroup().equals("public") ||
+            if (post.getGroup() == null ||
+                    post.getGroup().equals("public") ||
                     user.getGroupNames().contains(post.getGroup()))
                 posts_.add(post);
         }

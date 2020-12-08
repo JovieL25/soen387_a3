@@ -117,7 +117,7 @@
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
                                         <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
-                                        <a class="dropdown-item" href="#?download-post=1&&download-post-post-id=${post.postId}">Download Post as XML</a>
+                                        <a class="dropdown-item" href="?download-post=1&download-post-post-id=${post.postId}">Download Post as XML</a>
                                     </div>
 <%--                                </span>--%>
                             </div>
