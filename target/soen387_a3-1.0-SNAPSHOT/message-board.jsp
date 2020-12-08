@@ -109,7 +109,7 @@
                                         <c:if test="${post.userId==user.userId or user.admin }">
                                             <a id= "${post.postId}" class="dropdown-item postid" href="#${post.postId}" data-toggle="modal" data-target="#editPostModal">Edit</a>
                                             <!-- <a class="dropdown-item" href="#${post.postId}">Delete</a> -->
-                                            <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete" class="dropdown-item">
+                                            <input id= "delete${post.postId}" form="edit_delete_post" type="submit" name="delete-post" value="Delete Post" class="dropdown-item">
                                             <input form = "delete_attachment" id="delete_attachment_${post.postId}" class="dropdown-item" type="submit" name="delete-attachment" value="Delete Attachment">
                                         </c:if>
 
@@ -117,6 +117,7 @@
                                             <a class="dropdown-item" href="#">More</a>
                                         </c:if>
                                         <input form = "download_attachment" id="download${post.postId}" class="dropdown-item" type="submit" name="download-file" value="Download Attachment">
+                                        <a class="dropdown-item" href="#?download-post=1&&download-post-post-id=${post.postId}">Download Post as XML</a>
                                     </div>
 <%--                                </span>--%>
                             </div>
@@ -141,6 +142,10 @@
                     <div class="owner action">
                         <form id="download_attachment" class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
                         </form>
+
+                        <form id="download_xml" class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
+                        </form>
+
                         <form id="edit_delete_post" action="DownloadServlet" method="POST" enctype="multipart/form-data" class="form-login">
                         </form>
                         <form id="delete_attachment" class="form-inline my-2 my-lg-0" class="get-post-form" method="POST">
@@ -148,6 +153,7 @@
                         <input id="edit-post" value = "" form="edit_delete_post" required="required" name = "update-delete-post-id" type="hidden"/>
                         <input form="download_attachment" type="hidden" value= "" maxlength="4" size="4" id="download-file-post-id" name="download-file-post-id">
                         <input form="delete_attachment" type="hidden" value= "" maxlength="4" size="4" id="delete-file-post-id" name="delete-file-post-id">
+                        <input form="download_xml" type="hidden" value= "" maxlength="4" size="4" id="download-post-post-id" name="download-post-post-id">
                     </div>
                 </div>
             </div>
@@ -300,6 +306,13 @@
               if(event.target.id){
                   //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
                   $('#delete-file-post-id').val(event.target.id.replace("delete_attachment_",""));
+              }
+          });
+
+          $("input").click(function(event){
+              if(event.target.id){
+                  //alert("You've clicked: " + event.target.nodeName + ", id: " + event.target.id);
+                  $('#download-post-post-id').val(event.target.id.replace("download_xml_",""));
               }
           });
       });

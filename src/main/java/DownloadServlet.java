@@ -283,7 +283,7 @@ public class DownloadServlet extends HttpServlet {
 
     public void downloadPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String postId = request.getParameter("download-post-post-id");
-
+        System.out.println(postId);
         Post post = Manager.getPost(Integer.parseInt(postId));
 
         response.setHeader("Content-Disposition", "attachment; filename=\"post-" + postId + ".xml\"");
