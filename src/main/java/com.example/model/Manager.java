@@ -31,6 +31,12 @@ public class Manager {
         return SortPosts(postImpl.getAllPost());
     }
 
+    public static Post getLastPost(){
+        Post post = postImpl.getLastPost();
+        if(post!=null) return post;
+        else return null;
+    }
+
     public static ArrayList<Post> getAllPost(String number_str){
         if(number_str.equals(""))
         {
@@ -322,12 +328,12 @@ public class Manager {
         return sortedArray;
     }
 
+
+
     public static void main(String[] args)
     {
         System.out.println("!");
     }
 
-    public static Post getLastPost(){
-        return postImpl.getLastPost();
-    }
+
 }
