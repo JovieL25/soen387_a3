@@ -3,9 +3,7 @@ import com.example.db.DBConnection;
 import com.example.model.Manager;
 import com.example.model.Post;
 import com.example.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -16,7 +14,6 @@ public class JUnitTest {
     DownloadServlet downloadServlet = new DownloadServlet();
     Manager manager = new Manager();
     PostDaoImpl postDaoImple = new PostDaoImpl();
-
 
     @Test public void shall_connect_to_database(){
         DBConnection dbconnection = new DBConnection();
@@ -68,10 +65,6 @@ public class JUnitTest {
         int id = manager.getLastPost().getPostId();
         assertTrue(manager.deletePost(id));
         assertNotEquals(id, manager.getLastPost().getPostId());
-    }
-
-    @Test public void shall_(){
-
     }
 
     @Test public void shall_get_last_post(){

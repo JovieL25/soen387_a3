@@ -1,3 +1,6 @@
 src/main/java/com.example/db/DBConnection.java
 node_modules
 src/main/java/com.example/db/DBConnection.java
+target/*
+target/classes/com/example/dao/PostDAO.class
+target\*
