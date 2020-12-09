@@ -20,16 +20,17 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 //This is the business class
 
-public class Manager {
+public class Manager implements UserManager {
     private static ArrayList<Group> groups;
 
     private static HashMap<String, HashSet<String>> memberships;
 
     private static PostDaoImpl postImpl = new PostDaoImpl();
 
-    public static ArrayList<Post> getAllPost() {
+    public  ArrayList<Post> getAllPost() {
         return SortPosts(postImpl.getAllPost());
     }
+
 
     public static Post getLastPost(){
         Post post = postImpl.getLastPost();
@@ -65,7 +66,7 @@ public class Manager {
 
 
     // each parameter can be left as empty
-    public static ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag, String number_str){
+    public  ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag, String number_str){
 
         if(userId_str.equals("")){
             userId_str = null;
@@ -105,7 +106,7 @@ public class Manager {
 
     }
 
-    public static boolean createPost(Post post){
+    public  boolean createPost(Post post){
         if(postImpl.createPost(post)){
             return true;
         }
@@ -114,11 +115,11 @@ public class Manager {
         }
     }
 
-    public static Post getPost(int postId) {
+    public  Post getPost(int postId) {
         return postImpl.selectPost(postId);
     }
 
-    public static boolean updatePost(Post post){
+    public  boolean updatePost(Post post){
         if(postImpl.updatePost(post)){
             return true;
         }
@@ -127,7 +128,7 @@ public class Manager {
         }
     }
 
-    public static boolean deletePost(int postId){
+    public  boolean deletePost(int postId){
         if(postImpl.deletePost(postId)){
             return true;
         }
@@ -139,11 +140,11 @@ public class Manager {
     //login uses the passed email and password and search the user.xml file
     //with the same credentials, when they are match, this method returns this '
     //user object, otherwise it returns null
-    public static User login(String email, String password){
+    public  User login(String email, String password){
         return postImpl.getUser(email,password);
     }
 
-    public static void loadGroups(File groupsFile) {
+    public  void loadGroups(File groupsFile) {
         groups = new ArrayList<>();
 
         try {
@@ -181,7 +182,7 @@ public class Manager {
         }
     }
 
-    public static void loadMemberships(File membershipsFile) {
+    public  void loadMemberships(File membershipsFile) {
         memberships = new HashMap<>();
 
         try {
@@ -233,7 +234,7 @@ public class Manager {
         }
     }
 
-    public static User authenticate(String emailTest, String passwordTest, File usersFile) {
+    public  User authenticate(String emailTest, String passwordTest, File usersFile) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -269,15 +270,15 @@ public class Manager {
         return null;
     }
 
-    public static boolean insertFile(Part part, int postId) {
+    public  boolean insertFile(Part part, int postId) {
         return postImpl.insertFile(part, postId);
     }
 
-    public static boolean updateFile(Part part, int postId) {
+    public  boolean updateFile(Part part, int postId) {
         return postImpl.updateFile(part, postId);
     }
 
-    public static File selectFile(int postId) {
+    public  File selectFile(int postId) {
         File file = null;
 
         try {
@@ -289,23 +290,23 @@ public class Manager {
         return file;
     }
 
-    public static boolean uploadFile(String filePath, String postId_str){
+    public  boolean uploadFile(String filePath, String postId_str){
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.uploadFile(filePath,postId);
     }
 
-    public static boolean changeFile(String filePath, String postId_str){
+    public  boolean changeFile(String filePath, String postId_str){
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.changeFile(filePath,postId);
     }
 
-    public static boolean deleteFile(int postId) {
+    public  boolean deleteFile(int postId) {
         return postImpl.deleteFile(postId);
     }
 
-    public static java.sql.Date parseDate(String date) {
+    public  java.sql.Date parseDate(String date) {
         try {
             java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
             return new Date(utilDate.getTime());
@@ -315,7 +316,7 @@ public class Manager {
         }
     }
 
-    private static ArrayList<Post> SortPosts(Set<Post> rawPosts){
+    private  ArrayList<Post> SortPosts(Set<Post> rawPosts){
         ArrayList<Post> sortedArray = new ArrayList<>();
 
         for(Post p : rawPosts){
@@ -334,6 +335,5 @@ public class Manager {
     {
         System.out.println("!");
     }
-
 
 }

@@ -1,6 +1,4 @@
-import com.example.model.Manager;
-import com.example.model.Post;
-import com.example.model.User;
+import com.example.model.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +26,9 @@ import org.apache.commons.io.FileUtils;
 @MultipartConfig
 @WebServlet(name = "DownloadServlet")
 public class DownloadServlet extends HttpServlet {
+
+    private final UserManager Manager = UserManagerFactory.getInstance().create();
+
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
