@@ -31,7 +31,14 @@ public class Manager implements UserManager {
         return SortPosts(postImpl.getAllPost());
     }
 
-    public  ArrayList<Post> getAllPost(String number_str){
+
+    public static Post getLastPost(){
+        Post post = postImpl.getLastPost();
+        if(post!=null) return post;
+        else return null;
+    }
+
+    public static ArrayList<Post> getAllPost(String number_str){
         if(number_str.equals(""))
         {
             return SortPosts(postImpl.getAllPost());
@@ -322,12 +329,11 @@ public class Manager implements UserManager {
         return sortedArray;
     }
 
+
+
     public static void main(String[] args)
     {
         System.out.println("!");
     }
 
-    public  Post getLastPost(){
-        return postImpl.getLastPost();
-    }
 }

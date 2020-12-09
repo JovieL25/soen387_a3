@@ -3,11 +3,9 @@ import com.example.db.DBConnection;
 import com.example.model.Manager;
 import com.example.model.Post;
 import com.example.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-//import static org.mockito.Mockito.*;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,10 +13,7 @@ public class JUnitTest {
 
     DownloadServlet downloadServlet = new DownloadServlet();
     Manager manager = new Manager();
-
-    @Test public void testServlet() throws Exception{
-//        DownloadServlet request = mock(DownloadServlet.class);
-    }
+    PostDaoImpl postDaoImple = new PostDaoImpl();
 
     @Test public void shall_connect_to_database(){
         DBConnection dbconnection = new DBConnection();
@@ -28,7 +23,18 @@ public class JUnitTest {
 
     @Test public void get_all_post(){
         ArrayList<Post> posts = manager.getAllPost();
+        System.out.println(posts.size());
+        for(Post p : posts){
+            System.out.println(p);
+        }
         assertNotNull(posts);
+
+        Set<Post> posts2 = postDaoImple.getAllPost();
+        System.out.println(posts2.size());
+        for(Post p : posts2){
+            System.out.println(p);
+        }
+
     }
 
     @Test public void shall_create_a_post(){
@@ -61,12 +67,8 @@ public class JUnitTest {
         assertNotEquals(id, manager.getLastPost().getPostId());
     }
 
-    @Test public void shall_(){
-
-    }
-
     @Test public void shall_get_last_post(){
-        Post post = new Post(1,"Sample Last Title", "Sample Last Text","Sample Last Group");
+        Post post = new Post(1,"1Sample Last Title", "Sample Last Text","Sample Last Group");
         manager.createPost(post);
         Post lastPost = manager.getLastPost();
         assertTrue(lastPost.equals(post,"no_postDate"));
