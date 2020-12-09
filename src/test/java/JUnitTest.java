@@ -5,7 +5,7 @@ import com.example.model.Post;
 import com.example.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
+//import static org.mockito.Mockito.*;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class JUnitTest {
     Manager manager = new Manager();
 
     @Test public void testServlet() throws Exception{
-        DownloadServlet request = mock(DownloadServlet.class);
+//        DownloadServlet request = mock(DownloadServlet.class);
     }
 
     @Test public void shall_connect_to_database(){
