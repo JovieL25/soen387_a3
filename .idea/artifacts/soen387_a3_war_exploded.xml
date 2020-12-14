@@ -1,10 +1,10 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="soen387_a2:war exploded">
+  <artifact type="exploded-war" name="soen387_a3:war exploded">
     <output-path>$PROJECT_DIR$/target/soen387_a3-1.0-SNAPSHOT</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
-        <module>soen387_a2</module>
+        <module>soen387_a3</module>
         <packaging>war</packaging>
       </options>
     </properties>
