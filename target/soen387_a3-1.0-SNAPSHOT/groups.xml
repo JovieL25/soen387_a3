@@ -6,7 +6,7 @@
   </group>
   <group>
     <name>concordia</name>
-    <parent>encs</parent>
+    <parent></parent>
   </group>
   <group>
     <name>encs</name>
