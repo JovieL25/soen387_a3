@@ -22,9 +22,9 @@ public interface UserManager {
 
     public  User login(String email, String password);
 
-    public  void loadGroups(File groupsFile);
+    public  String loadGroups(File groupsFile);
 
-    public  void loadMemberships(File membershipsFile);
+    public  String loadMemberships(File membershipsFile);
 
     public  User authenticate(String emailTest, String passwordTest, File usersFile);
 

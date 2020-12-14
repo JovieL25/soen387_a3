@@ -106,9 +106,21 @@ public class DownloadServlet extends HttpServlet {
 
         File membershipsFile = new File(getServletContext().getRealPath("/") + "memberships.xml");
 
-        Manager.loadGroups(groupsFile);
+        String errorMessage;
 
-        Manager.loadMemberships(membershipsFile);
+        // TODO
+        // need front-end response
+        errorMessage = Manager.loadGroups(groupsFile);
+
+        if (errorMessage != null)
+            System.out.println(errorMessage);
+
+        // TODO
+        // need front-end response
+        errorMessage = Manager.loadMemberships(membershipsFile);
+
+        if (errorMessage != null)
+            System.out.println(errorMessage);
 
         User user = Manager.authenticate(email, password, usersFile);
         if (user != null) {

@@ -40,8 +40,12 @@ public class Group {
         groupNames.add(this.name);
 
         for (Group group: groups) {
-            if (group.hasAncestor(this))
+            if (group.hasAncestor(this)) {
+                if (hasAncestor(group))
+                    return null;
+
                 groupNames.add(group.name);
+            }
         }
 
         return groupNames;

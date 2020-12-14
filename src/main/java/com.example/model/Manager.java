@@ -144,7 +144,7 @@ public class Manager implements UserManager {
         return postImpl.getUser(email,password);
     }
 
-    public  void loadGroups(File groupsFile) {
+    public String loadGroups(File groupsFile) {
         groups = new ArrayList<>();
 
         try {
@@ -167,6 +167,12 @@ public class Manager implements UserManager {
                 String name   = nameNode.getTextContent();
                 String parent = parentNode.getTextContent();
 
+                ArrayList<String> groupNamesTest = new ArrayList<>();
+                for (Group group: groups)
+                    groupNamesTest.add(group.getName());
+                if (!parent.equals("") && !groupNamesTest.contains(parent))
+                    return "Parent \"" + parent + "\" does not exist.";
+
                 Group group = new Group(name);
 
                 for (Group group_: groups) {
@@ -180,9 +186,11 @@ public class Manager implements UserManager {
         catch (Exception exception) {
             exception.printStackTrace();
         }
+
+        return null;
     }
 
-    public  void loadMemberships(File membershipsFile) {
+    public String loadMemberships(File membershipsFile) {
         memberships = new HashMap<>();
 
         try {
@@ -211,9 +219,25 @@ public class Manager implements UserManager {
 
                     String groupName = groupNameNode.getTextContent();
 
+                    ArrayList<String> groupNamesTest = new ArrayList<>();
                     for (Group group: groups) {
-                        if (group.getName().equals(groupName))
-                            groupNames.addAll(group.getGroupNames(groups));
+                        groupNamesTest.add(group.getName());
+//                        System.out.print(group.getName() + " ");
+                    }
+//                    System.out.println();
+
+                    if (!groupNamesTest.contains(groupName))
+                        return "Undefined group \"" + groupName + "\" in the groups file.";
+
+                    for (Group group: groups) {
+                        if (group.getName().equals(groupName)) {
+                            ArrayList<String> tempGroupNames = group.getGroupNames(groups);
+
+                            if (tempGroupNames == null)
+                                return "Circular parent-child definition detected.";
+
+                            groupNames.addAll(tempGroupNames);
+                        }
                     }
                 }
 
@@ -232,6 +256,8 @@ public class Manager implements UserManager {
 
             System.out.println();
         }
+
+        return null;
     }
 
     public  User authenticate(String emailTest, String passwordTest, File usersFile) {
