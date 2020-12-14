@@ -32,13 +32,13 @@ public class Manager implements UserManager {
     }
 
 
-    public static Post getLastPost(){
+    public  Post getLastPost(){
         Post post = postImpl.getLastPost();
         if(post!=null) return post;
         else return null;
     }
 
-    public static ArrayList<Post> getAllPost(String number_str){
+    public  ArrayList<Post> getAllPost(String number_str){
         if(number_str.equals(""))
         {
             return SortPosts(postImpl.getAllPost());
