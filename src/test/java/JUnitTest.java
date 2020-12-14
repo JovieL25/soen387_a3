@@ -38,7 +38,7 @@ public class JUnitTest {
     }
 
     @Test public void shall_create_a_post(){
-        Post post = new Post(1,"Sample Title", "Sample Text","Sample Group");
+        Post post = new Post(1,"Sample Title", "Sample Text","admins");
         assertEquals(1,post.getUserId());
         assertEquals("Sample Title", post.getTitle());
         assertEquals("Sample Text",post.getText());
@@ -49,7 +49,7 @@ public class JUnitTest {
     }
 
     @Test public void shall_update_a_post(){
-        Post post = new Post(1,"Sample Title", "Sample Text","Sample Group");
+        Post post = new Post(1,"Sample Title", "Sample Text","admins");
         manager.createPost(post);
         post.setText("Edited Text");
         post.setTitle("Edited Title");
@@ -60,7 +60,7 @@ public class JUnitTest {
     }
 
     @Test public void shall_delete_a_post(){
-        Post post = new Post(1,"Sample Title", "Sample Text","Sample Group");
+        Post post = new Post(1,"Sample Title", "Sample Text","admins");
         manager.createPost(post);
         int id = manager.getLastPost().getPostId();
         assertTrue(manager.deletePost(id));
@@ -68,9 +68,11 @@ public class JUnitTest {
     }
 
     @Test public void shall_get_last_post(){
-        Post post = new Post(1,"1Sample Last Title", "Sample Last Text","Sample Last Group");
+        Post post = new Post(1,"1Sample Last Title", "Sample Last Text","admins");
         manager.createPost(post);
+        System.out.println(post);
         Post lastPost = manager.getLastPost();
+        System.out.println(lastPost);
         assertTrue(lastPost.equals(post,"no_postDate"));
     }
 
