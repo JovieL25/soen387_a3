@@ -12,7 +12,6 @@ import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -20,17 +19,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 //This is the business class
 
-public class Manager implements UserManager {
+public class Manager{
     private static ArrayList<Group> groups;
-
+    private static ArrayList<String> usersArray;
     private static HashMap<String, HashSet<String>> memberships;
+
+    private static UserManager userManagerImpl = UserManagerFactory.getInstance().create();
 
     private static PostDaoImpl postImpl = new PostDaoImpl();
 
-    public  ArrayList<Post> getAllPost() {
+    public static ArrayList<Post> getAllPost() {
         return SortPosts(postImpl.getAllPost());
     }
-
 
     public static Post getLastPost(){
         Post post = postImpl.getLastPost();
@@ -66,7 +66,7 @@ public class Manager implements UserManager {
 
 
     // each parameter can be left as empty
-    public  ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag, String number_str){
+    public static ArrayList<Post> getPost(String userId_str, String startDate_str, String endDate_str, String hashTag, String number_str){
 
         if(userId_str.equals("")){
             userId_str = null;
@@ -106,7 +106,7 @@ public class Manager implements UserManager {
 
     }
 
-    public  boolean createPost(Post post){
+    public static boolean createPost(Post post){
         if(postImpl.createPost(post)){
             return true;
         }
@@ -115,11 +115,11 @@ public class Manager implements UserManager {
         }
     }
 
-    public  Post getPost(int postId) {
+    public static Post getPost(int postId) {
         return postImpl.selectPost(postId);
     }
 
-    public  boolean updatePost(Post post){
+    public static boolean updatePost(Post post){
         if(postImpl.updatePost(post)){
             return true;
         }
@@ -128,7 +128,7 @@ public class Manager implements UserManager {
         }
     }
 
-    public  boolean deletePost(int postId){
+    public static boolean deletePost(int postId){
         if(postImpl.deletePost(postId)){
             return true;
         }
@@ -140,145 +140,203 @@ public class Manager implements UserManager {
     //login uses the passed email and password and search the user.xml file
     //with the same credentials, when they are match, this method returns this '
     //user object, otherwise it returns null
-    public  User login(String email, String password){
+    public static User login(String email, String password){
         return postImpl.getUser(email,password);
     }
 
-    public  void loadGroups(File groupsFile) {
-        groups = new ArrayList<>();
+    public static String loadGroups(File groupsFile) {
 
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.parse(groupsFile);
-            document.getDocumentElement().normalize();
-
-            NodeList groupsNodeList = document.getElementsByTagName("group");
-            for (int i = 0; i < groupsNodeList.getLength(); i++) {
-                Node groupNode = groupsNodeList.item(i);
-
-                Element groupElement = (Element)groupNode;
-
-                Node nameNode   = groupElement.getElementsByTagName("name").item(0);
-                Node parentNode = groupElement.getElementsByTagName("parent").item(0);
-
-                String name   = nameNode.getTextContent();
-                String parent = parentNode.getTextContent();
-
-                Group group = new Group(name);
-
-                for (Group group_: groups) {
-                    if (group_.getName().equals(parent))
-                        group.setParent(group_);
-                }
-
-                groups.add(group);
-            }
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        return userManagerImpl.loadGroups(groupsFile);
+//        System.out.println("loadGroups("+groupsFile+")");
+//        groups = new ArrayList<>();
+//
+//        try {
+//            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+//
+//            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+//
+//            Document document = documentBuilder.parse(groupsFile);
+//            document.getDocumentElement().normalize();
+//
+//            NodeList groupsNodeList = document.getElementsByTagName("group");
+//            for (int i = 0; i < groupsNodeList.getLength(); i++) {
+//                Node groupNode = groupsNodeList.item(i);
+//
+//                Element groupElement = (Element)groupNode;
+//
+//                Node nameNode   = groupElement.getElementsByTagName("name").item(0);
+//                Node parentNode = groupElement.getElementsByTagName("parent").item(0);
+//
+//                String name   = nameNode.getTextContent();
+//                String parent = parentNode.getTextContent();
+//
+//                ArrayList<String> groupNamesTest = new ArrayList<>();
+//                for (Group group: groups)
+//                    groupNamesTest.add(group.getName());
+//
+//                if (!parent.equals("") && !groupNamesTest.contains(parent)) {
+//                    return "Parent \"" + parent + "\" does not exist.";
+//                }
+//                Group group = new Group(name);
+//
+//                for (Group group_: groups) {
+//                    if (group_.getName().equals(parent))
+//                        group.setParent(group_);
+//                }
+//
+//                groups.add(group);
+//            }
+//        }
+//        catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
+//
+//        return null;
     }
 
-    public  void loadMemberships(File membershipsFile) {
-        memberships = new HashMap<>();
-
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.parse(membershipsFile);
-            document.getDocumentElement().normalize();
-
-            NodeList membershipNodeList = document.getElementsByTagName("membership");
-            for (int i = 0; i < membershipNodeList.getLength(); i++) {
-                Node membershipNode = membershipNodeList.item(i);
-
-                Element membershipElement = (Element)membershipNode;
-
-                Node userNameNode = membershipElement.getElementsByTagName("user-name").item(0);
-
-                String userName = userNameNode.getTextContent();
-
-                HashSet<String> groupNames = new HashSet<>();
-
-                NodeList groupNamesNodeList = membershipElement.getElementsByTagName("group-name");
-                for (int j = 0; j < groupNamesNodeList.getLength(); j++) {
-                    Node groupNameNode = groupNamesNodeList.item(j);
-
-                    String groupName = groupNameNode.getTextContent();
-
-                    for (Group group: groups) {
-                        if (group.getName().equals(groupName))
-                            groupNames.addAll(group.getGroupNames(groups));
-                    }
-                }
-
-                memberships.put(userName, groupNames);
-            }
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        for (String userName: memberships.keySet()) {
-            System.out.print(userName + ": ");
-
-            for (String groupName: memberships.get(userName))
-                System.out.print(groupName + " ");
-
-            System.out.println();
-        }
+    public static String loadMemberships(File membershipsFile) {
+        return userManagerImpl.loadMemberships(membershipsFile);
+//        memberships = new HashMap<>();
+//        usersArray = new ArrayList<String>();
+//        try {
+//            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+//
+//            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+//
+//            Document document = documentBuilder.parse(membershipsFile);
+//            document.getDocumentElement().normalize();
+//
+//            NodeList membershipNodeList = document.getElementsByTagName("membership");
+//            for (int i = 0; i < membershipNodeList.getLength(); i++) {
+//                Node membershipNode = membershipNodeList.item(i);
+//
+//                Element membershipElement = (Element)membershipNode;
+//
+//                Node userNameNode = membershipElement.getElementsByTagName("user-name").item(0);
+//
+//                String userName = userNameNode.getTextContent();
+//
+//                HashSet<String> groupNames = new HashSet<>();
+//
+//                NodeList userNamesNodeList = membershipElement.getElementsByTagName("user-name");
+//                for (int j = 0; j < userNamesNodeList.getLength(); j++) {
+////                    System.out.print("u"+i + " ");
+//                    Node u = userNamesNodeList.item(j);
+//
+//                    String uStr = u.getTextContent();
+//                    usersArray.add(uStr);
+//                    if(uStr.trim().equals("")){
+//                        return "There is an empty user in the groups file.";
+//                    }
+//                }
+//
+//                NodeList groupNamesNodeList = membershipElement.getElementsByTagName("group-name");
+//                for (int j = 0; j < groupNamesNodeList.getLength(); j++) {
+////                    System.out.print("g"+i + " ");
+//                    Node groupNameNode = groupNamesNodeList.item(j);
+//
+//                    String groupName = groupNameNode.getTextContent();
+//                    if(groupName.trim().equals("")){
+//                        return "There is an empty group in the groups file.";
+//                    }
+//
+//                    ArrayList<String> groupNamesTest = new ArrayList<>();
+//                    for (Group group: groups) {
+//                        groupNamesTest.add(group.getName());
+//                    }
+//
+//                    if (!groupNamesTest.contains(groupName))
+//                        return "Undefined group \"" + groupName + "\" in the groups file.";
+//
+//                    for (Group group: groups) {
+//                        if (group.getName().equals(groupName)) {
+//                            ArrayList<String> tempGroupNames = group.getGroupNames(groups);
+//
+//                            if (tempGroupNames == null)
+//                                return "Circular parent-child definition detected.";
+//
+//                            groupNames.addAll(tempGroupNames);
+//                        }
+//                    }
+//                }
+//
+//                memberships.put(userName, groupNames);
+//
+//            }
+//
+////            System.out.println("loadMemberships.memberships:"+memberships);
+////            System.out.println("loadMemberships.usersArray:"+usersArray);
+//        }
+//        catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
+//
+//        for (String userName: memberships.keySet()) {
+//            System.out.print(userName + ": ");
+//
+//            for (String groupName: memberships.get(userName))
+//                System.out.print(groupName + " ");
+//
+//            System.out.println();
+//        }
+//
+//        return null;
     }
 
-    public  User authenticate(String emailTest, String passwordTest, File usersFile) {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.parse(usersFile);
-            document.getDocumentElement().normalize();
-
-            NodeList usersNodeList = document.getElementsByTagName("user");
-            for (int i = 0; i < usersNodeList.getLength(); i++) {
-                Node userNode = usersNodeList.item(i);
-
-                Element userElement = (Element)userNode;
-
-                Node idNode       = userElement.getElementsByTagName("id").item(0);
-                Node nameNode     = userElement.getElementsByTagName("name").item(0);
-                Node emailNode    = userElement.getElementsByTagName("email").item(0);
-                Node passwordNode = userElement.getElementsByTagName("password").item(0);
-
-                String id           = idNode.getTextContent();
-                String name         = nameNode.getTextContent();
-                String emailTrue    = emailNode.getTextContent();
-                String passwordTrue = passwordNode.getTextContent();
-
-                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest)))
-                    return new User(id, name, emailTrue, passwordTrue, memberships.get(name));
-            }
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        return null;
+    public static User authenticate(String emailTest, String passwordTest, File usersFile) throws Exception {
+        return userManagerImpl.authenticate(emailTest, passwordTest, usersFile);
+//        try {
+//            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+//
+//            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+//
+//            Document document = documentBuilder.parse(usersFile);
+//            document.getDocumentElement().normalize();
+//
+//            NodeList usersNodeList = document.getElementsByTagName("user");
+//            for (int i = 0; i < usersNodeList.getLength(); i++) {
+//                Node userNode = usersNodeList.item(i);
+//
+//                Element userElement = (Element)userNode;
+//
+//                Node idNode       = userElement.getElementsByTagName("id").item(0);
+//                Node nameNode     = userElement.getElementsByTagName("name").item(0);
+//                Node emailNode    = userElement.getElementsByTagName("email").item(0);
+//                Node passwordNode = userElement.getElementsByTagName("password").item(0);
+//
+//                String id           = idNode.getTextContent();
+//                String name         = nameNode.getTextContent();
+//                String emailTrue    = emailNode.getTextContent();
+//                String passwordTrue = passwordNode.getTextContent();
+//
+//                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest))) {
+//                    if(memberships.get(name)==null){
+////                        System.out.println("Membership for " + name + " does not existed.");
+//                        throw new Exception("Membership for " + name + " does not existed.");
+//                    } else{
+//                        return new User(id, name, emailTrue, passwordTrue, memberships.get(name));
+//                    }
+//
+//                }
+//            }
+//        }
+//        catch (Exception exception) {
+//            exception.printStackTrace();
+//            throw exception;
+//        }
+//
+//        return null;
     }
 
-    public  boolean insertFile(Part part, int postId) {
+    public static boolean insertFile(Part part, int postId) {
         return postImpl.insertFile(part, postId);
     }
 
-    public  boolean updateFile(Part part, int postId) {
+    public static boolean updateFile(Part part, int postId) {
         return postImpl.updateFile(part, postId);
     }
 
-    public  File selectFile(int postId) {
+    public static File selectFile(int postId) {
         File file = null;
 
         try {
@@ -290,19 +348,19 @@ public class Manager implements UserManager {
         return file;
     }
 
-    public  boolean uploadFile(String filePath, String postId_str){
+    public static boolean uploadFile(String filePath, String postId_str){
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.uploadFile(filePath,postId);
     }
 
-    public  boolean changeFile(String filePath, String postId_str){
+    public static boolean changeFile(String filePath, String postId_str){
         Integer postId = Integer.parseInt(postId_str);
 
         return postImpl.changeFile(filePath,postId);
     }
 
-    public  boolean deleteFile(int postId) {
+    public static boolean deleteFile(int postId) {
         return postImpl.deleteFile(postId);
     }
 
@@ -316,7 +374,7 @@ public class Manager implements UserManager {
         }
     }
 
-    private  ArrayList<Post> SortPosts(Set<Post> rawPosts){
+    private static ArrayList<Post> SortPosts(Set<Post> rawPosts){
         ArrayList<Post> sortedArray = new ArrayList<>();
 
         for(Post p : rawPosts){

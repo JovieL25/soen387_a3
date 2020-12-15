@@ -24,6 +24,14 @@
         });
       </script>
     </c:if>
+    <c:if test="${not empty loginError}">
+      <script>
+        window.addEventListener("load", function () {
+          alert("Please enter correct username and password");
+        });
+      </script>
+    </c:if>
+
 
     <h1>Message Board</h1>
     <h1 class="h3 font-weight-normal">Please login</h1>
@@ -39,6 +47,31 @@
 
     <input type="submit" name="login" value="Sign in" class="btn btn-primary">
     <input type="submit" name="register" value="Sign up" class="btn btn-primary">
+
+    <br>
+    <div class="error-msg">
+      <%
+        String signuperr_msg=(String)request.getAttribute("signupError");
+        if(signuperr_msg!=null)
+          out.println("<div><font color=red size=2px><strong>SIGNUP ERROR: </strong>"+signuperr_msg+"</font></div>");
+      %>
+      <%
+        String loginerr_msg=(String)request.getAttribute("loginError");
+        if(loginerr_msg!=null)
+          out.println("<div><font color=red size=2px><strong>LOGIN ERROR: </strong>"+loginerr_msg+"</font></div>");
+      %>
+      <%
+        String grouperr_msg=(String)request.getAttribute("groupError");
+        if(grouperr_msg!=null)
+          out.println("<div><font color=red size=2px><strong>GROUP ERROR: </strong>"+grouperr_msg+"</font></div>");
+      %>
+      <%
+        String memerr_msg=(String)request.getAttribute("membershipError");
+        if(memerr_msg!=null)
+          out.println("<div><font color=red size=2px><strong>MEMBERSHIP ERROR: </strong>"+memerr_msg+"</font></div>");
+      %>
+    </div>
+
   </form>
 </body>
 

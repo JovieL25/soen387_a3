@@ -1,16 +1,12 @@
 import com.example.model.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 @WebServlet(name = "DownloadServlet")
 public class DownloadServlet extends HttpServlet {
 
-    private final UserManager Manager = UserManagerFactory.getInstance().create();
+//    private final UserManager Manager = UserManagerFactory.getInstance().create();
 
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
@@ -91,14 +87,19 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.setAttribute("signupError","1");
-
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.setAttribute("signupError","Sign up feature not available");
+        //request.getRequestDispatcher("login.jsp").forward(request, response);
+        RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+        rd.include(request, response);
     }
 
-    private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private boolean login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         String email    = request.getParameter("login-email");
         String password = request.getParameter("login-password");
+//        System.out.println("DownloadServlet.login(email:"+email+")");
+
+        String groupError, membershipError, loginError;
 
         File usersFile = new File(getServletContext().getRealPath("/") + "users.xml");
 
@@ -106,20 +107,66 @@ public class DownloadServlet extends HttpServlet {
 
         File membershipsFile = new File(getServletContext().getRealPath("/") + "memberships.xml");
 
-        Manager.loadGroups(groupsFile);
+        String errorMessage;
 
-        Manager.loadMemberships(membershipsFile);
+        // TODO
+        // need front-end response
+        errorMessage = Manager.loadGroups(groupsFile);
 
-        User user = Manager.authenticate(email, password, usersFile);
+        if (errorMessage != null) {
+            System.out.println(errorMessage);
+            request.setAttribute("groupError", errorMessage);
+            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
+            return false;
+        }
+
+        // TODO
+        // need front-end response
+        errorMessage = Manager.loadMemberships(membershipsFile);
+
+        if (errorMessage != null) {
+            System.out.println(errorMessage);
+            request.setAttribute("membershipError", errorMessage);
+            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
+            return false;
+        }
+
+        // LOAD USER
+        User user = null;
+        try{
+            user = Manager.authenticate(email, password, usersFile);
+        } catch (Exception e){
+            errorMessage = e.getMessage();
+            request.setAttribute("membershipError", errorMessage);
+            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
+            return false;
+        }
+
         if (user != null) {
             request.getSession().setAttribute("user", user);
 
             displayPosts(request, Manager.getAllPost(), 10, user);
 
             request.getRequestDispatcher("message-board.jsp").forward(request, response);
+        } else {
+//            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.setAttribute("loginError", "Please enter correct username and password");
+            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
         }
-        else
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+
+        return true;
+    }
+
+    private void showFileContent(File f) throws FileNotFoundException {
+        Scanner sc = new Scanner(f);
+        while(sc.hasNextLine()){
+            String str = sc.nextLine();
+            System.out.println(str);
+        }
     }
 
     private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
