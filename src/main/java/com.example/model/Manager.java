@@ -12,7 +12,6 @@ import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -22,7 +21,7 @@ import java.util.*;
 
 public class Manager implements UserManager {
     private static ArrayList<Group> groups;
-
+    private static ArrayList<String> usersArray;
     private static HashMap<String, HashSet<String>> memberships;
 
     private static PostDaoImpl postImpl = new PostDaoImpl();
@@ -30,7 +29,6 @@ public class Manager implements UserManager {
     public  ArrayList<Post> getAllPost() {
         return SortPosts(postImpl.getAllPost());
     }
-
 
     public  Post getLastPost(){
         Post post = postImpl.getLastPost();
@@ -145,6 +143,7 @@ public class Manager implements UserManager {
     }
 
     public String loadGroups(File groupsFile) {
+//        System.out.println("loadGroups("+groupsFile+")");
         groups = new ArrayList<>();
 
         try {
@@ -170,9 +169,10 @@ public class Manager implements UserManager {
                 ArrayList<String> groupNamesTest = new ArrayList<>();
                 for (Group group: groups)
                     groupNamesTest.add(group.getName());
-                if (!parent.equals("") && !groupNamesTest.contains(parent))
-                    return "Parent \"" + parent + "\" does not exist.";
 
+                if (!parent.equals("") && !groupNamesTest.contains(parent)) {
+                    return "Parent \"" + parent + "\" does not exist.";
+                }
                 Group group = new Group(name);
 
                 for (Group group_: groups) {
@@ -192,7 +192,7 @@ public class Manager implements UserManager {
 
     public String loadMemberships(File membershipsFile) {
         memberships = new HashMap<>();
-
+        usersArray = new ArrayList<String>();
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -213,18 +213,32 @@ public class Manager implements UserManager {
 
                 HashSet<String> groupNames = new HashSet<>();
 
+                NodeList userNamesNodeList = membershipElement.getElementsByTagName("user-name");
+                for (int j = 0; j < userNamesNodeList.getLength(); j++) {
+//                    System.out.print("u"+i + " ");
+                    Node u = userNamesNodeList.item(j);
+
+                    String uStr = u.getTextContent();
+                    usersArray.add(uStr);
+                    if(uStr.trim().equals("")){
+                        return "There is an empty user in the groups file.";
+                    }
+                }
+
                 NodeList groupNamesNodeList = membershipElement.getElementsByTagName("group-name");
                 for (int j = 0; j < groupNamesNodeList.getLength(); j++) {
+//                    System.out.print("g"+i + " ");
                     Node groupNameNode = groupNamesNodeList.item(j);
 
                     String groupName = groupNameNode.getTextContent();
+                    if(groupName.trim().equals("")){
+                        return "There is an empty group in the groups file.";
+                    }
 
                     ArrayList<String> groupNamesTest = new ArrayList<>();
                     for (Group group: groups) {
                         groupNamesTest.add(group.getName());
-//                        System.out.print(group.getName() + " ");
                     }
-//                    System.out.println();
 
                     if (!groupNamesTest.contains(groupName))
                         return "Undefined group \"" + groupName + "\" in the groups file.";
@@ -242,7 +256,11 @@ public class Manager implements UserManager {
                 }
 
                 memberships.put(userName, groupNames);
+
             }
+
+//            System.out.println("loadMemberships.memberships:"+memberships);
+//            System.out.println("loadMemberships.usersArray:"+usersArray);
         }
         catch (Exception exception) {
             exception.printStackTrace();
@@ -260,7 +278,7 @@ public class Manager implements UserManager {
         return null;
     }
 
-    public  User authenticate(String emailTest, String passwordTest, File usersFile) {
+    public User authenticate(String emailTest, String passwordTest, File usersFile) throws Exception {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -285,12 +303,20 @@ public class Manager implements UserManager {
                 String emailTrue    = emailNode.getTextContent();
                 String passwordTrue = passwordNode.getTextContent();
 
-                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest)))
-                    return new User(id, name, emailTrue, passwordTrue, memberships.get(name));
+                if (emailTrue.equals(emailTest) && passwordTrue.equals(XMLFile.hashPassword(passwordTest))) {
+                    if(memberships.get(name)==null){
+//                        System.out.println("Membership for " + name + " does not existed.");
+                        throw new Exception("Membership for " + name + " does not existed.");
+                    } else{
+                        return new User(id, name, emailTrue, passwordTrue, memberships.get(name));
+                    }
+
+                }
             }
         }
         catch (Exception exception) {
             exception.printStackTrace();
+            throw exception;
         }
 
         return null;

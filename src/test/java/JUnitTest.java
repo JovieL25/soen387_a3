@@ -68,7 +68,7 @@ public class JUnitTest {
     }
 
     @Test public void shall_get_last_post(){
-        Post post = new Post(1,"1Sample Last Title", "Sample Last Text","admins");
+        Post post = new Post(1,"Sample Last Title", "Sample Last Text","admins");
         manager.createPost(post);
         System.out.println(post);
         Post lastPost = manager.getLastPost();
@@ -78,6 +78,6 @@ public class JUnitTest {
 
     @Test public void shall_login(){
         User u = manager.login("tianmingchen@gmail.com","12345");
-        System.out.println(u);
+        //System.out.println(u);
     }
 }
