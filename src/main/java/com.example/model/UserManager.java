@@ -26,7 +26,7 @@ public interface UserManager {
 
     public  String loadMemberships(File membershipsFile);
 
-    public  User authenticate(String emailTest, String passwordTest, File usersFile);
+    public  User authenticate(String emailTest, String passwordTest, File usersFile) throws Exception;
 
     public  boolean insertFile(Part part, int postId);
 
