@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 @WebServlet(name = "DownloadServlet")
 public class DownloadServlet extends HttpServlet {
 
-    private final UserManager Manager = UserManagerFactory.getInstance().create();
+//    private final UserManager Manager = UserManagerFactory.getInstance().create();
 
     private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 

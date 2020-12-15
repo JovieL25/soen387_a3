@@ -24,7 +24,7 @@ public class UserManagerFactory {
 
             String className = properties.getProperty("classname");
             System.out.println(className);
-            return (UserManager)Class.forName("com.example.model." +className).newInstance();
+            return (UserManager)Class.forName("com.example.impl." +className).newInstance();
 //            return null;
         }
         catch (Exception e){
